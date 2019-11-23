@@ -12,6 +12,7 @@ node = [{  # node[0]['nodes']
     "editor_version": "2.1"
 }]
 characters = []
+variables = []
 current_node_index = 1
 node_template = {
     "character": [],
@@ -30,6 +31,8 @@ with open(input_script_name, 'r') as script:
 ##        with open('%s.json' % first_line[1].strip(), 'w') as out_script:
 ##                json.dump(template, out_script)
     for line in script:
+
+        
         if "execute" in line.split(":")[0]:
             current_node = {
                 "text": line.split(":")[1].strip(),
@@ -44,6 +47,85 @@ with open(input_script_name, 'r') as script:
                 final_found_flag = True
                 current_node["next"] = None
             node[0]["nodes"].append(current_node.copy())
+##
+##        elif "condition_branch" in in line.split(":")[0]:
+##            current_node = {
+##                "node_name": str(current_node_index),
+##                "node_type": "set_local_variable",
+##                "branches": {
+##                    "False": line.split(":")[1].split(",")[1],
+##                    "True": line.split(":")[1].split(",")[2]
+##                },
+##                "text": line.split(":")[1].split(",")[0]
+##            }
+##
+##            node[0]["nodes"].append(current_node.copy())
+            
+
+
+
+            
+        elif "set" in line.split(":")[0]:
+            current_node = {
+                "node_name": str(current_node_index),
+                "node_type": "set_local_variable",
+                "operation_type": None,
+                "toggle": False,
+                "value": line.split(":")[1].split(",")[1].strip(),
+                "var_name": line.split(":")[1].split(",")[0].strip(),
+                "next": str(current_node_index+1)
+            }
+            # split the line into keys and text
+            list = line.split(":")
+            # list[0] contains keys which we separate by commas
+            keys = list[0].split(",")
+            for index in range(len(keys)):
+                keys[index] = keys[index].strip()
+            print(line.split(":")[1].split(",")[1].strip().upper())
+            # check for variable tags
+            if "SET" in keys:
+                current_node["operation_type"] = "SET"
+            elif "ADD" in keys:
+                current_node["operation_type"] = "ADD"
+            elif "SUBTRACT" in keys:
+                current_node["operation_type"] = "SUBTRACT"
+            if "toggle" in keys:
+                current_noded["toggle"] = True
+            if "0" in keys:
+                var_type = 0
+            elif "1" in keys:
+                var_type = 1
+            elif "2" in keys:
+                var_type = 2 
+            # check for variable name and variable value
+          
+               
+            print ('awthohou')
+            print (line.split(":")[1].split(",")[1].strip().upper())
+            if line.split(":")[1].split(",")[1].strip().upper() == "TRUE":
+                current_node["value"] = True
+            elif line.split(":")[1].split(",")[1].strip().upper() == "FALSE":
+                current_node["value"] = False
+            elif line.split(":")[1].split(",")[1].strip().isdigit() == True: # isdigit only works when the number is positive ### IMPORTANT ### 
+                current_node["value"] = int(line.split(":")[1].split(",")[1].strip())
+
+            if current_node["var_name"] not in node[0]["variables"]:
+                node[0]["variables"][current_node["var_name"]] = {
+                    "type": var_type,
+                    "value": current_node["value"]
+                }
+            print ("set for")
+            print (current_node)
+            # check for final tag
+            if ("final" not in line.split(":")[0]):
+                current_node_index += 1
+                current_node["next"] = str(current_node_index)
+            elif ("final" in line.split(":")[0]):
+                final_found_flag = True
+                current_node["next"] = None
+            
+            node[0]["nodes"].append(current_node.copy())
+             
         else:
             current_node = {
                 "character": ["sam"],
