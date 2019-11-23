@@ -1,0 +1,8 @@
+NAME: Mysterious Robot
+execute: print("Robot encounters Player")
+Robot: "Greetings, traveler."
+Robot: "We converge on our path once more."
+Robot: "Sit down."
+Robot: "I've always loved how this world's beauty at night."
+Robot: "..."
+Robot, final: "Not much time is left, yes?"
