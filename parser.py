@@ -62,8 +62,20 @@ with open(input_script_name, 'r') as script:
 ##            node[0]["nodes"].append(current_node.copy())
 
 
-
-
+	elif "wait" in line.split(":")[0]:
+	    current_node = {
+		"time": float(line.split(":")[1].strip()),
+		"node_name": str(current_node_index),
+		"node_type": "wait",
+		"next": str(current_node_index+1)
+	    }
+	    if ("final" not in line.split(":")[0]):
+		current_node_index += 1
+		current_node["next"] = str(current_node_index)
+	    elif ("final" in line.split(":")[0]):
+		final_found_flag = True
+		current_node["next"] = None
+	    node[0]["nodes"].append(current_node.copy())
 
         elif "set" in line.split(":")[0]:
             current_node = {

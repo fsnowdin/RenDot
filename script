@@ -1,5 +1,4 @@
-NAME: Bubble-Text-Test
-Player, neutral: "This is a box message"
-Robot, bubble: "This is a bubble message"
-Robot, bubble_slide: "This is a slide-camera bubble message"
-execute, final: print("Text is finished.")
+NAME: Bubble
+Villain, bubble: "Who's there?"
+wait: 1.0
+Villain, bubble_slide, final: "Are you trust-worthy? | If you are, then we can continue."
