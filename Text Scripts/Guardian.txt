@@ -1,0 +1,7 @@
+NAME: Guardian 
+Guardian: "Thou are leaving?"
+Guardian: "Not a wise decision I shall say."
+Guardian: "But alas staying confined inside this prison shall not bring any of us salvation."
+Guardian: "Haha..."
+Guardian: "I can only wish luck to you."
+Guardian: "Excelsior."
