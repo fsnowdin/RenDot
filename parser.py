@@ -1,7 +1,7 @@
 
 import json
 import os
-input_script_name = "script.txt"
+input_script_name = "script"
 out_script_name = "script"
 out_script = 0
 node = [{  # node[0]['nodes']
@@ -32,7 +32,7 @@ with open(input_script_name, 'r') as script:
 ##                json.dump(template, out_script)
     for line in script:
 
-        
+
         if "execute" in line.split(":")[0]:
             current_node = {
                 "text": line.split(":")[1].strip(),
@@ -60,11 +60,11 @@ with open(input_script_name, 'r') as script:
 ##            }
 ##
 ##            node[0]["nodes"].append(current_node.copy())
-            
 
 
 
-            
+
+
         elif "set" in line.split(":")[0]:
             current_node = {
                 "node_name": str(current_node_index),
@@ -96,17 +96,17 @@ with open(input_script_name, 'r') as script:
             elif "1" in keys:
                 var_type = 1
             elif "2" in keys:
-                var_type = 2 
+                var_type = 2
             # check for variable name and variable value
-          
-               
+
+
             print ('awthohou')
             print (line.split(":")[1].split(",")[1].strip().upper())
             if line.split(":")[1].split(",")[1].strip().upper() == "TRUE":
                 current_node["value"] = True
             elif line.split(":")[1].split(",")[1].strip().upper() == "FALSE":
                 current_node["value"] = False
-            elif line.split(":")[1].split(",")[1].strip().isdigit() == True: # isdigit only works when the number is positive ### IMPORTANT ### 
+            elif line.split(":")[1].split(",")[1].strip().isdigit() == True: # isdigit only works when the number is positive ### IMPORTANT ###
                 current_node["value"] = int(line.split(":")[1].split(",")[1].strip())
 
             if current_node["var_name"] not in node[0]["variables"]:
@@ -123,9 +123,9 @@ with open(input_script_name, 'r') as script:
             elif ("final" in line.split(":")[0]):
                 final_found_flag = True
                 current_node["next"] = None
-            
+
             node[0]["nodes"].append(current_node.copy())
-             
+
         else:
             current_node = {
                 "character": ["sam"],
@@ -134,6 +134,7 @@ with open(input_script_name, 'r') as script:
                 "text": {
                     "ENG": "text"
                 },
+                "slide_camera": False,
                 "node_name": "1",
                 "node_type": "show_message",
                 "face": None
@@ -161,15 +162,9 @@ with open(input_script_name, 'r') as script:
             current_node["node_name"] = str(current_node_index)
             # add in the node type
             current_node["node_type"] = "show_message"
-            # add in the face frame
-            if "neutral" in keys:
-                current_node["face"] = 0
-            elif "happy" in keys:
-                current_node["face"] = 1
-            elif "sad" in keys:
-                current_node["face"] = 2
-            else:
-                current_node["face"] = None
+
+            # message modifiers
+
             # add in the next node
             if ("final" not in keys):
                 current_node_index += 1
@@ -177,13 +172,36 @@ with open(input_script_name, 'r') as script:
             elif ("final" in keys):
                 final_found_flag = True
                 current_node["next"] = None
+
+            # check for bubble text
+            # 2 types of bubble text: no slide camera and slide slide_camera
+            # bubble depends on matching character names in the script file and the Godot engine
+            if "bubble" in keys:
+                current_node["is_box"] = False
+                current_node["face"] = None
+            elif "bubble_slide" in keys:
+                current_node["is_box"] = False
+                current_node["slide_camera"] = True
+                current_node["face"] = None
+            else:
+                # box message so there can be face
+                # add in the face
+                if "neutral" in keys:
+                    current_node["face"] = 0
+                elif "happy" in keys:
+                    current_node["face"] = 1
+                elif "sad" in keys:
+                    current_node["face"] = 2
+                else:
+                    current_node["face"] = None
+
             # finished adding
-   
+
             # append current_node the the out_script node object
             node[0]["nodes"].append(current_node.copy())
-    
 
- 
+
+
     if (final_found_flag):
         with open(out_script_name, "w") as out_script:
             json.dump(node, out_script)
@@ -193,6 +211,3 @@ with open(input_script_name, 'r') as script:
         with open("BITCH YOU GOT NO FINAL TAG.json", "w") as out_script:
             json.dump(node, out_script)
         print("NO FINAL TAG GET BACK IN HERE REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-        
-        
-        

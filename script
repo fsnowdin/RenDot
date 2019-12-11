@@ -1,3 +1,5 @@
-NAME: Lmao-lit-af
-Fmooji-Man: Lmao lit mannnnnnn
-Thanos, final: Hacker man lxxxddd
+NAME: Bubble-Text-Test
+Player, neutral: "This is a box message"
+Robot, bubble: "This is a bubble message"
+Robot, bubble_slide: "This is a slide-camera bubble message"
+execute, final: print("Text is finished.")
