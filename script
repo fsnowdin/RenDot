@@ -1,4 +1,0 @@
-NAME: Bubble
-Villain, bubble: "Who's there?"
-wait: 1.0
-Villain, bubble_slide, final: "Are you trust-worthy? | If you are, then we can continue."
