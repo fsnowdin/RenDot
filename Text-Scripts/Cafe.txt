@@ -1,0 +1,3 @@
+NAME: Cafe
+Player: "The old cafe."
+Player, final: "Still lively as ever."

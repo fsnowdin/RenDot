@@ -1,0 +1,3 @@
+NAME: Shopper-Chat
+Shopper: "Just got the package for the holidays."
+Shopper, final: "Sweet deal, isn't it."

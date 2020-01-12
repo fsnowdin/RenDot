@@ -1,4 +1,0 @@
-NAME: New-Script
-Protag: "It's been a long day, hasn't it."
-Protag: "..."
-Protag, final: "Goodbye."

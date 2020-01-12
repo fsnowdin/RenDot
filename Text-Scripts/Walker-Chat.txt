@@ -1,0 +1,3 @@
+NAME: Walker-Chat
+Walker: "Good day out for the dog."
+Walker, final: "Get some exercise, son." 
