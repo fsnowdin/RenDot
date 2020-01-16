@@ -31,7 +31,8 @@ with open(input_script_name, 'r') as script:
 # with open('%s.json' % first_line[1].strip(), 'w') as out_script:
 ##                json.dump(template, out_script)
     for line in script:
-
+        
+        # Check for code to execute 
         if "execute" in line.split(":")[0]:
             current_node = {
                 "text": line.split(":")[1].strip(),
@@ -46,6 +47,7 @@ with open(input_script_name, 'r') as script:
                 final_found_flag = True
                 current_node["next"] = None
             node[0]["nodes"].append(current_node.copy())
+
 ##
 # elif "condition_branch" in in line.split(":")[0]:
 # current_node = {
@@ -60,6 +62,12 @@ with open(input_script_name, 'r') as script:
 ##
 # node[0]["nodes"].append(current_node.copy())
 
+        # Ignore # 
+        # Support for comments
+        elif '#' in line:
+            continue
+
+        # Add wait functionality
         elif "wait" in line.split(":")[0]:
             current_node = {
                 "time": float(line.split(":")[1].strip()),

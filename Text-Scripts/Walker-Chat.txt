@@ -1,3 +1,4 @@
 NAME: Walker-Chat
-Walker: "Good day out for the dog."
-Walker, final: "Get some exercise, son." 
+Walker, happy: "Good day out for the dog."
+# Use the hashtag to comment, explain stuff
+Walker, neutral,final: "Get some exercise, son." 

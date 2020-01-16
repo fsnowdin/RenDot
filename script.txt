@@ -1,0 +1,4 @@
+NAME: Test
+Protag, neutral: "Hello there mister!"
+# Check for existence of mister 
+Protag, sad, final: "Guess you don't exist yet..."
