@@ -28,8 +28,7 @@ with open(input_script_name, 'r') as script:
     if ('NAME' in first_line):
 
         out_script_name = '%s.json' % first_line[1].strip()
-# with open('%s.json' % first_line[1].strip(), 'w') as out_script:
-##                json.dump(template, out_script)
+
     for line in script:
         
         # Check for code to execute 
