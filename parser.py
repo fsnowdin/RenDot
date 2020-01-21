@@ -62,9 +62,9 @@ with open(input_script_name, 'r') as script:
 ##
 # node[0]["nodes"].append(current_node.copy())
 
-        # Ignore # 
+        # Ignore // 
         # Support for comments
-        elif '#' in line:
+        elif '//' in line:
             continue
 
         # Add wait functionality
