@@ -18,11 +18,10 @@ final_found_flag = False
 with open(input_script_name, 'r') as script:
     first_line = script.readline().split(':')
     if ('NAME' in first_line):
-
         out_script_name = '%s.json' % first_line[1].strip()
+        print('Parsing %s' % first_line[1].strip())
 
     for line in script:
-
         # Check for code to execute
         if "execute" in line.split(":")[0]:
             current_node = {
@@ -136,6 +135,45 @@ with open(input_script_name, 'r') as script:
 
             node[0]["nodes"].append(current_node.copy())
 
+        # Monologue 
+        elif 'mono' in line.split(":")[0]:
+            current_node = {
+                "character": ["None"],
+                "is_box": True,
+                "speaker_type": 0,
+                "text": {
+                    "ENG": "text"
+                },
+                "slide_camera": False,
+                "node_name": "1",
+                "node_type": "show_message",
+                "face": None
+            }
+            # split the line into keys and text
+            list = line.split(":")
+            # list[0] contains keys which we separate by commas
+            keys = list[0].split(",")
+            for index in range(len(keys)):
+                keys[index] = keys[index].strip()
+            # list[1] is the dialogue text
+            text = list[1].strip()
+
+            # starts appending to current_node
+            # keys, text
+            # add in the current text
+            new_text = current_node["text"]
+            new_text["ENG"] = text
+            current_node["node_name"] = str(current_node_index)
+            current_node["node_type"] = "show_message"
+            # check for final tag
+            if ("final" not in keys):
+                current_node_index += 1
+                current_node["next"] = str(current_node_index)
+            elif ("final" in keys):
+                final_found_flag = True
+                current_node["next"] = None
+            # append current_node the the out_script node object
+            node[0]["nodes"].append(current_node.copy())
         else:
             current_node = {
                 "character": ["None"],
@@ -149,32 +187,23 @@ with open(input_script_name, 'r') as script:
                 "node_type": "show_message",
                 "face": None
             }
+            # Line is a dialogue
+            # Add the character to the node
+            # split the line into keys and text
+            list = line.split(":")
+            # list[0] contains keys which we separate by commas
+            keys = list[0].split(",")
+            for index in range(len(keys)):
+                keys[index] = keys[index].strip()
+            # list[1] is the dialogue text
+            text = list[1].strip()
 
-            # Check if the line is a character dialogue
-            if len(line.split(":")) == 1:
-                # Line is a monologue
-                # So just don't add characters to the node
-                keys = None
-                text = line.strip()
-                print("%s is a monolouge" % text)
-            else:
-                # Line is a dialogue
-                # Add the character to the node
-                # split the line into keys and text
-                list = line.split(":")
-                # list[0] contains keys which we separate by commas
-                keys = list[0].split(",")
-                for index in range(len(keys)):
-                    keys[index] = keys[index].strip()
-                # list[1] is the dialogue text
-                text = list[1].strip()
-
-                # starts appending to current_node
-                # keys, text
-                # add in the current character
-                if keys[0] not in node[0]["characters"]:
-                    node[0]["characters"].append(keys[0])
-                current_node["character"][0] = keys[0]
+            # starts appending to current_node
+            # keys, text
+            # add in the current character
+            if keys[0] not in node[0]["characters"]:
+                node[0]["characters"].append(keys[0])
+            current_node["character"][0] = keys[0]
             # add in the current text
             new_text = current_node["text"]
             new_text["ENG"] = text
@@ -184,42 +213,34 @@ with open(input_script_name, 'r') as script:
             current_node["node_type"] = "show_message"
 
             # Dialogue modifiers below
-            if len(line.split(":")) != 1:
-                if ("final" not in keys):
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
-                elif ("final" in keys):
-                    final_found_flag = True
-                    current_node["next"] = None
+            if ("final" not in keys):
+                current_node_index += 1
+                current_node["next"] = str(current_node_index)
+            elif ("final" in keys):
+                final_found_flag = True
+                current_node["next"] = None
 
-                # check for bubble text
-                # 2 types of bubble text: no slide camera and slide slide_camera
-                # bubble depends on matching character names in the script file and the Godot engine
-                if "bubble" in keys:
-                    current_node["is_box"] = False
-                    current_node["face"] = None
-                elif "bubble_slide" in keys:
-                    current_node["is_box"] = False
-                    current_node["slide_camera"] = True
-                    current_node["face"] = None
-                else:
-                    # box message so there can be face
-                    # add in the face
-                    if "neutral" in keys:
-                        current_node["face"] = 0
-                    elif "happy" in keys:
-                        current_node["face"] = 1
-                    elif "sad" in keys:
-                        current_node["face"] = 2
-                    else:
-                        current_node["face"] = None
+            # check for bubble text
+            # 2 types of bubble text: no slide camera and slide slide_camera
+            # bubble depends on matching character names in the script file and the Godot engine
+            if "bubble" in keys:
+                current_node["is_box"] = False
+                current_node["face"] = None
+            elif "bubble_slide" in keys:
+                current_node["is_box"] = False
+                current_node["slide_camera"] = True
+                current_node["face"] = None
             else:
-                    # Add in pointer for the following node
-                    # Warning that a monologue cannot be a final node
-                    # So if you want to end with a monologue
-                    # Add a placeholder node at the end of the script
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
+                # box message so there can be face
+                # add in the face
+                if "neutral" in keys:
+                    current_node["face"] = 0
+                elif "happy" in keys:
+                    current_node["face"] = 1
+                elif "sad" in keys:
+                    current_node["face"] = 2
+                else:
+                    current_node["face"] = None
             # append current_node the the out_script node object
             node[0]["nodes"].append(current_node.copy())
     # Check for final tag in the last script line
@@ -227,10 +248,8 @@ with open(input_script_name, 'r') as script:
         with open(out_script_name, "w") as out_script:
             json.dump(node, out_script)
             print("finished")
-            os.remove("BITCH YOU GOT NO FINAL TAG.json")
     else:
         node[0]['nodes'][current_node_index-1]["next"] = None
-        print (node[0]['nodes'][current_node_index-1])
         with open(out_script_name, "w") as out_script:
             json.dump(node, out_script)
             print("finished")
