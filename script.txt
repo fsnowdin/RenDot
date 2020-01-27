@@ -1,4 +1,8 @@
-NAME: Test
-Protag, neutral: "Hello there mister!"
-# Check for existence of mister 
-Protag, sad, final: "Guess you don't exist yet..."
+NAME: Example-Script
+Player, neutral: "Hello there, this is a dialogue."
+wait: 3
+execute: print('hello world')
+Player, happy: "How about that!" 
+Player, sad: "I can only make 3 faces unfornately..."
+mono: It's okay though. When I'm in my head, the possibilities are endless!
+New-Character, neutral, final: "Just be sure to add a final key to the last line!"

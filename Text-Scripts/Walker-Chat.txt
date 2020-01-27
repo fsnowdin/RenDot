@@ -1,4 +1,0 @@
-NAME: Walker-Chat
-Walker, happy: "Good day out for the dog."
-# Use the hashtag to comment, explain stuff
-Walker, neutral,final: "Get some exercise, son." 
