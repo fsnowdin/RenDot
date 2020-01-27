@@ -135,42 +135,6 @@ with open(input_script_name, 'r') as script:
             # append current_node the the output_script node object
             node[0]["nodes"].append(current_node.copy())
 
-        # Monologue
-        # Essentially means no face sprite for the dialogue box
-        elif 'mono' in line.split(":")[0]:
-            current_node = {
-                "character": ["None"],
-                "is_box": True,
-                "speaker_type": 0,
-                "text": {
-                    "ENG": "text"
-                },
-                "slide_camera": False,
-                "node_name": "1",
-                "node_type": "show_message",
-                "face": None
-            }
-            # split the line into keys and text
-            list = line.split(":")
-            keys = list[0].split(",")
-            for index in range(len(keys)):
-                keys[index] = keys[index].strip()
-            text = list[1].strip()
-            # starts appending to current_node
-            new_text = current_node["text"]
-            new_text["ENG"] = text
-            current_node["node_name"] = str(current_node_index)
-            current_node["node_type"] = "show_message"
-            # check for final key for finalizing the script
-            if ("final" not in keys):
-                current_node_index += 1
-                current_node["next"] = str(current_node_index)
-            elif ("final" in keys):
-                final_found_flag = True
-                current_node["next"] = None
-            # append current_node the the output_script node object
-            node[0]["nodes"].append(current_node.copy())
-
         # Normal box/bubble dialogue with a face sprite
         else:
             current_node = {
@@ -182,8 +146,7 @@ with open(input_script_name, 'r') as script:
                 },
                 "slide_camera": False,
                 "node_name": "1",
-                "node_type": "show_message",
-                "face": None
+                "node_type": "show_message"
             }
             # split the line into keys and text
             list = line.split(":")
@@ -211,7 +174,7 @@ with open(input_script_name, 'r') as script:
             # check for bubble dialogue
             # 2 types of bubble dialogue: no slide camera and slide camera
             # bubble depends on matching character names in the script file...
-            # ...and the Godot Engine scene structure (root_node/Characters/character_name)
+            # ...and the Godot Engine scene structure (root_node/main/character_name)
             if "bubble" in keys:
                 current_node["is_box"] = False
                 current_node["face"] = None
@@ -219,17 +182,6 @@ with open(input_script_name, 'r') as script:
                 current_node["is_box"] = False
                 current_node["slide_camera"] = True
                 current_node["face"] = None
-            # Use box dialogue by default
-            else:
-                # Character expressions
-                if "neutral" in keys:
-                    current_node["face"] = 0
-                elif "happy" in keys:
-                    current_node["face"] = 1
-                elif "sad" in keys:
-                    current_node["face"] = 2
-                else:
-                    current_node["face"] = None
             # append current_node the the output_script node object
             node[0]["nodes"].append(current_node.copy())
     # Check for final key in the last script line
