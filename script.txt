@@ -1,7 +1,9 @@
 NAME: Example-Script
 Player, neutral: "Hello there, this is a dialogue."
+Player, neutral: "How about we have a 3-second moment of silence?"
 wait: 3
-execute: print('hello world')
+Player, neutral: "Let's log something to the console!"
+execute: print('Hello world!')
 Player, happy: "How about that!" 
 Player, sad: "I can only make 3 faces unfornately..."
 mono: It's okay though. When I'm in my head, the possibilities are endless!
