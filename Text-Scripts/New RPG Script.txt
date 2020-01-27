@@ -1,8 +1,0 @@
-NAME: New RPG Script
-execute: print("hello world")
-execute: print("welcome to...")
-execute: print("the game.")
-Player: A flash covers my vision.
-Player: A world emerges before my eyes.
-Player: It feels strangely familiar...
-Player, final: "Home...?"

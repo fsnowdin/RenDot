@@ -1,3 +1,0 @@
-NAME: Lady
-Lady: "Hello, Protag."
-Lady, final: "How was your day?"

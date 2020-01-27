@@ -1,5 +1,0 @@
-NAME: Student-Chat
-Student: "Busy day today."
-Student: "Such beautiful weather."
-Student: "Yet I have to go to school."
-Student, final: "And the bus is late again."
