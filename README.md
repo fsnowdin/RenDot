@@ -29,3 +29,6 @@ mono: It's okay though. When I'm in my head, the possibilities are endless! // M
 New-Character, neutral, final: "Just be sure to add a final key to the last line!"
 ```
 Run parser.py to export the script as a JSON file for use with radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
+
+# License
+Licensed under the MIT license.
