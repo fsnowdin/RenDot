@@ -24,6 +24,8 @@ with open(input_script_name, 'r') as script:
         print('Parsing %s' % first_line[1].strip())
     # Start parsing the body of the script
     for line in script:
+        # Print out currently parsing line for debugging purposes
+        print('Currenly parsing %s' % line)
         # Check for script keys and run their respective methods
         if "execute" in line.split(":")[0]:
             current_node = {
