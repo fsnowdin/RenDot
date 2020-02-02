@@ -4,11 +4,11 @@
 
 A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
 
-# Installation
+## Installation
 
 Clone the repository and navigate into its directory. The parser only need parser.py and a customizable script.txt to work.
 
-# Usage
+## Usage
 
 TODO: Write proper documentation for how to write scripts for the parser.
 
@@ -30,5 +30,5 @@ New-Character, neutral, final: "Just be sure to add a final key to the last line
 ```
 Run parser.py to export the script as a JSON file for use with radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
 
-# License
+## License
 Licensed under the MIT license.
