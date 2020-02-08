@@ -275,7 +275,7 @@ def open_file_dialog():
                 output_script.close()
         # Send finish message
         finish_message = QMessageBox()
-        finish_message.setText('Finished parsing %s' % input_script_name.split('/')[len(input_script_name[0].split('/'))-1])
+        finish_message.setText('Finished parsing %s' % input_script_name.split('/')[len(input_script_name.split('/'))-1])
         finish_message.setWindowTitle('Finished!')
         finish_message.setWindowOpacity(0.9)
         finish_message.exec_()
