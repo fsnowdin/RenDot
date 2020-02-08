@@ -5,11 +5,15 @@ from PyQt5.QtWidgets import *
 
 # Bring up the GUI 
 app =QApplication([])
-label = QLabel('Pick files to parse')
-# Create the file dialog
-filepicker = QFileDialog()
-button = QPushButton('Open File')
+# Create the parser window
 window = QWidget()
+window.setWindowTitle('Parser')
+# Add stuff
+label = QLabel('Pick a file to parse')
+# Create the file dialog
+filepicker = QFileDialog(window)
+button = QPushButton('Open File')
+# Set the window layout
 layout = QVBoxLayout()
 layout.addWidget(label)
 layout.addWidget(button)
@@ -272,6 +276,8 @@ def open_file_dialog():
         # Send finish message
         finish_message = QMessageBox()
         finish_message.setText('Finished parsing %s' % input_script_name.split('/')[len(input_script_name[0].split('/'))-1])
+        finish_message.setWindowTitle('Finished!')
+        finish_message.setWindowOpacity(0.9)
         finish_message.exec_()
         script.close()
 # Connect the button to the file dialog
