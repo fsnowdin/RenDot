@@ -194,23 +194,23 @@ def open_file_dialog():
                 else:
                     text = line.split(":")[1].strip()
                 # starts appending to current_node
-                new_text=current_node["text"]
-                new_text["ENG"]=text
-                current_node["node_name"]=str(current_node_index)
-                current_node["node_type"]="show_message"
+                new_text = current_node["text"]
+                new_text["ENG"] = text
+                current_node["node_name"] = str(current_node_index)
+                current_node["node_type"] = "show_message"
                 # check for final key for finalizing the script
                 if ("final" not in keys):
                     current_node_index += 1
-                    current_node["next"]=str(current_node_index)
+                    current_node["next"] = str(current_node_index)
                 elif ("final" in keys):
-                    final_found_flag=True
-                    current_node["next"]=None
+                    final_found_flag = True
+                    current_node["next"] = None
                 # append current_node the the output_script node object
                 node[0]["nodes"].append(current_node.copy())
 
             # Normal box/bubble dialogue with a face sprite
             else:
-                current_node={
+                current_node = {
                     "character": ["None"],
                     "is_box": True,
                     "speaker_type": 0,
@@ -223,10 +223,10 @@ def open_file_dialog():
                     "face": None
                 }
                 # split the line into keys and text
-                list=line.split(":")
-                keys=list[0].split(",")
+                list = line.split(":")
+                keys = list[0].split(",")
                 for index in range(len(keys)):
-                    keys[index]=keys[index].strip()
+                    keys[index] = keys[index].strip()
                 # check if the text has a colon in it
                 if len(line.split(":")) > 2:
                     new_array = []
@@ -239,41 +239,41 @@ def open_file_dialog():
                 # add in the current character
                 if keys[0] not in node[0]["characters"]:
                     node[0]["characters"].append(keys[0])
-                current_node["character"][0]=keys[0]
-                new_text=current_node["text"]
+                current_node["character"][0] = keys[0]
+                new_text = current_node["text"]
                 # potential for easy localization with new_text combined with enviroment variables
-                new_text["ENG"]=text
-                current_node["node_name"]=str(current_node_index)
-                current_node["node_type"]="show_message"
+                new_text["ENG"] = text
+                current_node["node_name"] = str(current_node_index)
+                current_node["node_type"] = "show_message"
                 # check for final key for finalizing the script
                 if ("final" not in keys):
                     current_node_index += 1
-                    current_node["next"]=str(current_node_index)
+                    current_node["next"] = str(current_node_index)
                 elif ("final" in keys):
-                    final_found_flag=True
-                    current_node["next"]=None
+                    final_found_flag = True
+                    current_node["next"] = None
                 # check for bubble dialogue
                 # 2 types of bubble dialogue: no slide camera and slide camera
                 # bubble depends on matching character names in the script file...
                 # ...and the Godot Engine scene structure (root_node/Characters/character_name)
                 if "bubble" in keys:
-                    current_node["is_box"]=False
-                    current_node["face"]=None
+                    current_node["is_box"] = False
+                    current_node["face"] = None
                 elif "bubble_slide" in keys:
-                    current_node["is_box"]=False
-                    current_node["slide_camera"]=True
-                    current_node["face"]=None
+                    current_node["is_box"] = False
+                    current_node["slide_camera"] = True
+                    current_node["face"] = None
                 # Use box dialogue by default
                 else:
                     # Character expressions
                     if "neutral" in keys:
-                        current_node["face"]=0
+                        current_node["face"] = 0
                     elif "happy" in keys:
-                        current_node["face"]=1
+                        current_node["face"] = 1
                     elif "sad" in keys:
-                        current_node["face"]=2
+                        current_node["face"] = 2
                     else:
-                        current_node["face"]=None
+                        current_node["face"] = None
                 # append current_node the the output_script node object
                 node[0]["nodes"].append(current_node.copy())
         # Check for final key in the last script line
@@ -284,19 +284,21 @@ def open_file_dialog():
                 print("Finished parsing %s" % output_script.name)
                 output_script.close()
         else:
-            node[0]['nodes'][current_node_index-1]["next"]=None
+            node[0]['nodes'][current_node_index-1]["next"] = None
             with open(output_script_name, "w") as output_script:
                 json.dump(node, output_script)
                 print("Finished parsing %s" % output_script.name)
                 output_script.close()
         # Send finish message
-        finish_message=QMessageBox()
+        finish_message = QMessageBox()
         finish_message.setText('Finished parsing %s' % input_script_name.split(
             '/')[len(input_script_name.split('/'))-1])
         finish_message.setWindowTitle('Finished!')
         finish_message.setWindowOpacity(0.9)
         finish_message.exec_()
         script.close()
+
+
 # Connect the button to the file dialog
 button.clicked.connect(open_file_dialog)
 # Show the window
