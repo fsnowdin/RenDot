@@ -39,10 +39,12 @@ def open_file_dialog():
     current_node_index = 1
     final_found_flag = False
     # Open the file dialog
-    filename = filepicker.getOpenFileName()
+    #filename = filepicker.getOpenFileName()
     # Identify the file to be parsed
     # input_script_name = filename[0].split('/')[len(filename[0].split('/'))-1]
-    input_script_name = filename[0]
+    #input_script_name = filename[0]
+    # EDIT: Just parse script.txt automatically
+    input_script_name = "script.txt"
     # Do the parsing
     with open(input_script_name, 'r') as script:
         first_line = script.readline().split(':')
@@ -291,13 +293,11 @@ def open_file_dialog():
                 output_script.close()
         # Send finish message
         finish_message = QMessageBox()
-        finish_message.setText('Finished parsing %s' % input_script_name.split(
-            '/')[len(input_script_name.split('/'))-1])
+        finish_message.setText('Finished parsing %s' % output_script_name)
         finish_message.setWindowTitle('Finished!')
         finish_message.setWindowOpacity(0.9)
         finish_message.exec_()
         script.close()
-
 
 # Connect the button to the file dialog
 button.clicked.connect(open_file_dialog)
