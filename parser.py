@@ -274,6 +274,8 @@ def open_file_dialog():
                         current_node["face"] = 1
                     elif "sad" in keys:
                         current_node["face"] = 2
+                    elif "shocked" in keys:
+                        current_node["face"] = 3
                     else:
                         current_node["face"] = None
                 # append current_node the the output_script node object
