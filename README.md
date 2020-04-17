@@ -4,6 +4,8 @@ A parser that takes in a Ren'Py-like text script and parse it into a JSON file f
 
 ## Installation
 
+This parser requires the `python3-pyqt5-sip` package. You probably won't need it.
+
 Clone the repository and navigate into its directory. The parser only need parser.py and a customizable script.txt to work.
 
 ## Usage
