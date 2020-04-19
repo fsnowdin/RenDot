@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import json
 import os
 from PyQt5.QtWidgets import *
