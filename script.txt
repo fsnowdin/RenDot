@@ -1,13 +1,2 @@
-NAME: Example-Script
-// You can explain things or write notes with by using '//' to comment
-Player, neutral: "Hello there, this is a dialogue."
-Player, neutral: "How about we have a 3-second moment of silence?"
-wait: 3
-Player, neutral: "Let's log something to the console!"
-// Execute GDScript inside the Godot Engine
-execute: print('Hello world!')
-Player, happy: "How about that!" 
-Player, sad: "I can only make 3 expressions unfornately..." // New expressions can be added so don't sweat it
-mono: It's okay though. When I'm in my head, the possibilities are endless! // Monologue like VNs
-// We can add a new character quite easily
-New-Character, neutral: "Hi!"
+NAME: Helu
+Helen, happy: "Helu"

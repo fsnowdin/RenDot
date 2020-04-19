@@ -9,10 +9,10 @@ app = QApplication([])
 window = QWidget()
 window.setWindowTitle('Parser')
 # Add stuff
-label = QLabel('Pick a file to parse')
+label = QLabel('Parse script.txt?')
 # Create the file dialog
 filepicker = QFileDialog(window)
-button = QPushButton('Open File')
+button = QPushButton('Parse')
 # Set the window layout
 layout = QVBoxLayout()
 layout.addWidget(label)
@@ -21,7 +21,6 @@ window.setLayout(layout)
 
 # Show the file dialog when the button is clicked
 filename = ''
-
 
 def open_file_dialog():
     # Declare variables
@@ -280,19 +279,12 @@ def open_file_dialog():
                         current_node["face"] = None
                 # append current_node the the output_script node object
                 node[0]["nodes"].append(current_node.copy())
-        # Check for final key in the last script line
-        # Add it in automatically if the script doesn't have one
-        if (final_found_flag):
-            with open(output_script_name, "w") as output_script:
-                json.dump(node, output_script)
-                print("Finished parsing %s" % output_script.name)
-                output_script.close()
-        else:
-            node[0]['nodes'][current_node_index-1]["next"] = None
-            with open(output_script_name, "w") as output_script:
-                json.dump(node, output_script)
-                print("Finished parsing %s" % output_script.name)
-                output_script.close()
+        # Produce the JSON dialogue
+        node[0]['nodes'][current_node_index-1]["next"] = None
+        with open("./JSON-Dialogues/%s" % output_script_name, "w") as output_script:
+            json.dump(node, output_script)
+            print("Finished parsing %s" % output_script.name)
+            output_script.close()
         # Send finish message
         finish_message = QMessageBox()
         finish_message.setText('Finished parsing %s' % output_script_name)
