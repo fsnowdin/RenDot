@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# TODO: Also save script.txt as a text file in a Text-Scripts folder
 import json
 import os
 from PyQt5.QtWidgets import *
