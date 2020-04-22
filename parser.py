@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # TODO: Also save script.txt as a text file in a Text-Scripts folder
+# TODO: Re-write this as an Electron app
 import json
 import os
 from PyQt5.QtWidgets import *
@@ -21,13 +22,14 @@ layout.addWidget(button)
 window.setLayout(layout)
 
 # Show the file dialog when the button is clicked
-filename = ''
+filename = ""
 
 def open_file_dialog():
     # Declare variables
     out_script_name = "script"
     out_script = 0
-    node = [{  # node[0]['nodes']
+    # Access syntax: node[0]['nodes']
+    node = [{  
         "characters": [],
         "nodes": [{"next": "1", "node_name": "START", "node_type": "start"}],
         "languages": ['ENG'],
@@ -191,7 +193,6 @@ def open_file_dialog():
                 node[0]["nodes"].append(current_node.copy())
             
             # Empty line check
-            
             elif line in ['\n', '\r\n']:
                 print("Empty line. Skipping...")
                 continue
@@ -240,6 +241,7 @@ def open_file_dialog():
                 elif ("final" in keys):
                     final_found_flag = True
                     current_node["next"] = None
+
                 # check for bubble dialogue
                 # 2 types of bubble dialogue: no slide camera and slide camera
                 # bubble depends on matching character names in the script file...
