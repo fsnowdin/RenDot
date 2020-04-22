@@ -38,12 +38,6 @@ def open_file_dialog():
     variables = []
     current_node_index = 1
     final_found_flag = False
-    # Open the file dialog
-    #filename = filepicker.getOpenFileName()
-    # Identify the file to be parsed
-    # input_script_name = filename[0].split('/')[len(filename[0].split('/'))-1]
-    #input_script_name = filename[0]
-    # EDIT: Just parse script.txt automatically
     input_script_name = "script.txt"
     # Do the parsing
     with open(input_script_name, 'r') as script:
@@ -72,20 +66,6 @@ def open_file_dialog():
                     final_found_flag = True
                     current_node["next"] = None
                 node[0]["nodes"].append(current_node.copy())
-
-            # Conditional branching implementation
-            # elif "condition_branch" in in line.split(":")[0]:
-            # current_node = {
-            # "node_name": str(current_node_index),
-            # "node_type": "set_local_variable",
-            # "branches": {
-            # "False": line.split(":")[1].split(",")[1],
-            # "True": line.split(":")[1].split(",")[2]
-            # },
-            # "text": line.split(":")[1].split(",")[0]
-            # }
-            #
-            # node[0]["nodes"].append(current_node.copy())
 
             # Comment scripts with //
             elif '//' in line:
@@ -209,7 +189,13 @@ def open_file_dialog():
                     current_node["next"] = None
                 # append current_node the the output_script node object
                 node[0]["nodes"].append(current_node.copy())
-
+            
+            # Empty line check
+            
+            elif line in ['\n', '\r\n']:
+                print("Empty line. Skipping...")
+                continue
+            
             # Normal box/bubble dialogue with a face sprite
             else:
                 current_node = {
@@ -269,6 +255,8 @@ def open_file_dialog():
                 else:
                     # Character expressions
                     if "neutral" in keys:
+                        current_node["face"] = 0
+                    elif "normal" in keys:
                         current_node["face"] = 0
                     elif "happy" in keys:
                         current_node["face"] = 1
