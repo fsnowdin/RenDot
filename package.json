@@ -1,13 +1,29 @@
 {
   "name": "rendot",
   "version": "1.0.0",
-  "description": "Parser",
+  "homepage": "https://github.com/tghgg/Ren'Dot",
+  "description": "A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into the Godot Dialogue System by radmatt",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir"
   },
-  "author": "tghgg",
+  "build": {
+    "appId": "me.rendotparser.RenDot",
+    "productName": "Ren'Dot",
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development",
+      "executableName": "Ren'Dot"
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "./assets/icon.ico"
+    }
+  },
+  "author": "Falling Snowdin",
   "license": "MIT",
   "devDependencies": {
     "electron": "^8.2.3",
