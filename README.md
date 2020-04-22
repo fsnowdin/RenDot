@@ -6,7 +6,7 @@ A parser that takes in a Ren'Py-like text script and parse it into a JSON file f
 
 ## Installation
 
-Download the latest binary for your operating system [here](https://github.com/tghgg/Ren-Dot/releases/tag/untagged-9ea942bfec00d987d4a4) and run the executable.
+Download the zip [here](https://github.com/tghgg/Ren-Dot/releases/tag/untagged-9ea942bfec00d987d4a4), extract it, and run the executable.
 
 ## Usage
 
