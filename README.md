@@ -16,6 +16,8 @@ On your first start, Ren'Dot will ask you for a directory to place produced JSON
 
 Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot.
 
+**Don't forget to save your text script after you're done parsing!**
+
 ### Script Structure
 
 TODO: Write proper documentation for how to write scripts for Ren'Dot.
