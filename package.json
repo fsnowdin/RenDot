@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "semistandard": "semistandard --fix"
   },
   "build": {
     "appId": "me.rendotparser.RenDot",
@@ -27,6 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^8.2.3",
+    "electron-builder": "^22.5.1",
     "semistandard": "^14.2.0"
   }
 }
