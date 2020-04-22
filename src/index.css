@@ -1,12 +1,17 @@
-@font-face { font-family: Delicious; src: url('Delicious-Roman.otf'); } 
+@font-face { 
+    font-family: Roboto;
+    src: '../assets/Roboto-Regular.ttf';
+} 
 
 input {
     color: white;
+    font-family: 'Roboto', sans-serif;
     background-color: black;
 }
 
 textarea {
     overflow-y: auto;
+    font-family: 'Roboto', sans-serif;
     color: white;
     background-color: black;
     height: auto;
