@@ -1,12 +1,16 @@
 {
   "name": "rendot",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Parser",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
   "author": "tghgg",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^8.2.3",
+    "semistandard": "^14.2.0"
+  }
 }
