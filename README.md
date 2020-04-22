@@ -10,7 +10,9 @@ Download the latest binary for your operating system [here](https://github.com/t
 
 ## Usage
 
-On your first start, Ren'Dot will ask you for a place to put produced JSON dialogues.
+As the Windows binary is unsigned, you'll get the Windows Defender warning when starting Ren'Dot, ignore it by clicking on More info then press Run anyway. You're welcomed to not trust the binary.
+
+On your first start, Ren'Dot will ask you for a directory to place produced JSON dialogues.
 
 Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot.
 
