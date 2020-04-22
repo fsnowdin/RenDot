@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "src/",
+			"problemMatcher": [],
+			"label": "npm: start - src",
+			"detail": "electron .",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

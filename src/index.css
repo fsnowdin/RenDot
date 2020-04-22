@@ -1,0 +1,17 @@
+@font-face { font-family: Delicious; src: url('Delicious-Roman.otf'); } 
+
+input {
+    color: white;
+    background-color: black;
+}
+
+textarea {
+    overflow-y: auto;
+    color: white;
+    background-color: black;
+    height: auto;
+}
+
+body {
+    text-align: center;
+}
