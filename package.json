@@ -7,7 +7,9 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "semistandard": "semistandard --fix"
+    "semistandard": "semistandard --fix",
+    "pack_windows": "electron-builder -w",
+    "pack_linux": "electron-builder -l"
   },
   "build": {
     "appId": "me.rendotparser.RenDot",
