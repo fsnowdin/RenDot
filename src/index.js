@@ -99,7 +99,12 @@ app.on('ready', () => {
         if (err) dialog.showErrorBox('Error', 'Failed to intialize JSON output directory');
       });
     }
+  } else {
+    // Create 2 folders for storing JSON dialogues and text scripts if they don't exist already
+    file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'));
+    file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts'));
   }
+
 });
 
 // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
@@ -110,18 +115,19 @@ app.on('quit', (event, exitCode) => {
 });
 
 ipcMain.on('started_parsing', (event, data) => {
-  // console.log('Clone the script to Text-Scripts');
-  // file_handler.createTextFile(`./TextScripts/${data.name}.txt`, data.script, (err) => {
-  //   if (err) {
-  //     dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
-  //   }
-  // });
+  console.log('Clone the script to Text-Scripts');
+  const output_dir = file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
+  file_handler.createTextFile(join(join(output_dir, 'Text Scripts'), data.name+'.txt'), data.script, (err) => {
+    if (err) {
+      dialog.showErrorBox('Error', `${err}\nFailed to save the text script.`);
+    }
+  });
 
   console.log('Start the process of parsing script.txt');
   const json_dialogue = parser.parse(data.script);
-  file_handler.create(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), data.name, json_dialogue, (err) => {
+  file_handler.create(join(output_dir, 'JSON Dialogues'), data.name, json_dialogue, (err) => {
     if (err) {
-      dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
+      dialog.showErrorBox('Error', `${err}\nFailed to save the JSON dialogue.`);
     }
   });
 
@@ -129,7 +135,7 @@ ipcMain.on('started_parsing', (event, data) => {
   dialog.showMessageBox({
     title: 'Finished!',
     message: 'Finished parsing your script.',
-    buttons: ['Close']
+    buttons: ['OK']
   });
 });
 
