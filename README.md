@@ -6,7 +6,7 @@ A parser that takes in a Ren'Py-like text script and parse it into a JSON file f
 
 ## Installation
 
-Download the latest zip file [here](https://github.com/tghgg/Ren-Dot/releases), extract it, and run the executable.
+Download the latest file suitable for your operating system [here](https://github.com/tghgg/Ren-Dot/releases), extract it if it's a zip, and run the executable.
 
 ## Usage
 
@@ -24,8 +24,6 @@ Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script
 
 TODO: Write proper documentation for how to write scripts for Ren'Dot.
 ```
-NAME: Example-Script 
-// The name above will be the name of the output JSON file and the clone script in Text-Scripts
 // You can explain things or write notes with by using '//' to comment
 Player, neutral: "Hello there, this is a dialogue."
 Player, neutral: "How about we have a 3-second moment of silence?"
