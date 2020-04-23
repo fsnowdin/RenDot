@@ -41,7 +41,8 @@ const init_menu = [
     click: (menuItem, window, event) => {
       dialog.showMessageBox({
         title: 'About',
-        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/RenDot\nYou can find your Ren'Dot output directory in your AppData\\rendot\\output_dir.txt if you're on Windows",
+        type: 'info',
+        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at " + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + ".",
         buttons: ['Close']
       });
     }
@@ -49,7 +50,6 @@ const init_menu = [
   {
     label: 'Quit',
     click: () => {
-      // Quit app completely instead of minimizing to tray
       app.quit();
     }
   }
@@ -61,7 +61,9 @@ app.on('ready', () => {
 
   let window_size;
   // Set window size to window size in previous session
-  if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) window_size = file_handler.readSync(join(app.getPath('userData'), 'window_size.json')); 
+  if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) {
+    window_size = JSON.parse(file_handler.readSync(join(app.getPath('userData'), 'window_size.json')));
+  }
   else window_size = {
     'x': 800,
     'y': 700
@@ -73,7 +75,7 @@ app.on('ready', () => {
       height: window_size.y,
       backgroundColor: '#1d1d1d',
       icon: './assets/icon.ico',
-      show: true,
+      show: false,
       webPreferences: { nodeIntegration: true },
       enableRemoteModule: false
     }
@@ -91,27 +93,28 @@ app.on('ready', () => {
       properties: ['openDirectory']
     });
     if (result !== undefined) {
-      file_handler.createTextFile(join(app.getPath('userData'), 'output_dir.txt'), result[0], (err) => {
-        if (err) dialog.showErrorBox('Error', 'Failed to intialize JSON output directory');
-      });
+      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
     } else {
-      file_handler.createTextFile(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'), (err) => {
-        if (err) dialog.showErrorBox('Error', 'Failed to intialize JSON output directory');
-      });
+      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
     }
-  } else {
-    // Create 2 folders for storing JSON dialogues and text scripts if they don't exist already
-    file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'));
-    file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts'));
   }
 
-});
-
-// Save current window size on quit so the next time Ren'Dot starts, it will use this window size
-app.on('quit', (event, exitCode) => {
-  file_handler.create(app.getPath('userData'), 'window_size', {'x': mainWindow.getSize()[0], 'y': mainWindow.getSize()[1]}, (err) => {
-    if (err) console.log('Failed to save window size on quit');
+  // Create 2 folders for storing JSON dialogues and text scripts if they don't exist already
+  file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'), (err) => {
+    if (err) dialog.showErrorBox('Error', 'Failed to intialize Text Scripts output directory');
   });
+  file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts'), (err) => {
+    if (err) dialog.showErrorBox('Error', 'Failed to intialize JSON Dialogues output directory');
+  });
+
+  mainWindow.show();
+
+  // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
+  mainWindow.on('close', (event, exitCode) => {
+    console.log(mainWindow.getSize());
+    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({'x': mainWindow.getSize()[0], 'y': mainWindow.getSize()[1]}));
+  });
+
 });
 
 ipcMain.on('started_parsing', (event, data) => {
@@ -134,6 +137,7 @@ ipcMain.on('started_parsing', (event, data) => {
   console.log('Finish!');
   dialog.showMessageBox({
     title: 'Finished!',
+    type: 'info',
     message: 'Finished parsing your script.',
     buttons: ['OK']
   });
@@ -166,6 +170,7 @@ ipcMain.on('save-script', (event, data) => {
         else {
           dialog.showMessageBox({
             message: 'Script saved successfully',
+            type: 'info',
             buttons: ['OK']
           });
         }
