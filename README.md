@@ -1,5 +1,8 @@
 # Ren'Dot
 
+![screenshot](./assets/screenshot.png)
+
+
 **NOTE: This is my own custom version of the parser meant for use within my own games. It contains support for monologues and custom character expressions. However, these changes have to be accompanied by changes to the Godot Dialogue System addon itself so I have made the master branch the general parser for default use.**
 
 A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
@@ -9,8 +12,6 @@ A parser that takes in a Ren'Py-like text script and parse it into a JSON file f
 Download the latest file suitable for your operating system [here](https://github.com/tghgg/Ren-Dot/releases), extract it if it's a zip, and run the executable.
 
 ## Usage
-
-![screenshot](./assets/screenshot.png)
 
 As the Windows binary is unsigned, you'll get the Windows Defender warning when starting Ren'Dot, ignore it by clicking on More info then press Run anyway. You're welcomed to not trust the binary.
 
