@@ -15,6 +15,8 @@ const init_menu = [
         dialog.showOpenDialog(mainWindow, {
           filters: [{
             name: '.txt', extensions: ['txt']
+          }, {
+            name: 'All Files', extensions: ['*']
           }],
           properties: ['openFile']
         }).then((file_object) => {
@@ -74,6 +76,7 @@ app.on('ready', () => {
   if (!file_handler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
     dialog.showMessageBoxSync(mainWindow, {
       title: "Welcome to Ren'Dot",
+      buttons: ['OK'],
       message: "Since this is your first time using Ren'Dot, you will need to choose a directory to place your output JSON files.\nDon't worry, you will need to do this just once."
     });
     const result = dialog.showOpenDialogSync(mainWindow, {
@@ -92,12 +95,12 @@ app.on('ready', () => {
 });
 
 ipcMain.on('started_parsing', (event, data) => {
-  console.log('Clone the script to Text-Scripts');
-  file_handler.createTextFile(`./TextScripts/${data.name}.txt`, data.script, (err) => {
-    if (err) {
-      dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
-    }
-  });
+  // console.log('Clone the script to Text-Scripts');
+  // file_handler.createTextFile(`./TextScripts/${data.name}.txt`, data.script, (err) => {
+  //   if (err) {
+  //     dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
+  //   }
+  // });
 
   console.log('Start the process of parsing script.txt');
   const json_dialogue = parser.parse(data.script);
@@ -132,17 +135,18 @@ ipcMain.on('save-script', (event, data) => {
       title: 'Save Script',
       defaultPath: data.name,
       filters: [{
-        name: 'Scripts', extensions: ['txt']
+        name: '.txt', extensions: ['txt']
       }]
     }).then((result) => {
       if (result.canceled) return;
       console.log('path');
       console.log(result.filePath);
-      file_handler.createTextFile(result.filePath, data.script, (err) => {
+      file_handler.createTextFile(result.filePath+'.txt', data.script, (err) => {
         if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
         else {
           dialog.showMessageBox({
-            message: 'Script saved successfully'
+            message: 'Script saved successfully',
+            buttons: ['OK']
           });
         }
       });
