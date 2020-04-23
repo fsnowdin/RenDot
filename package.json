@@ -1,6 +1,6 @@
 {
   "name": "rendot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/tghgg/Ren'Dot",
   "description": "A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into the Godot Dialogue System by radmatt",
   "main": "src/index.js",
@@ -19,6 +19,7 @@
         "AppImage"
       ],
       "category": "Development",
+      "icon": "./assets/506x504.png",
       "executableName": "Ren'Dot"
     },
     "win": {
