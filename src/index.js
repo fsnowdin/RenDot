@@ -63,6 +63,8 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(init_menu);
   Menu.setApplicationMenu(menu);
 
+  app.allowRendererProcessReuse = true;
+
   let window_size;
   // Set window size to window size in previous session
   if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) {
@@ -176,7 +178,7 @@ ipcMain.on('started_parsing', (event, data) => {
   dialog.showMessageBox(mainWindow, {
     title: 'Finished!',
     type: 'info',
-    message: 'Finished parsing your script.',
+    message: 'Parsing complete.\nYour script has been auto-saved.',
     buttons: ['OK']
   });
 
@@ -195,9 +197,15 @@ ipcMain.handle('editor-overwrite-confirmation', async (event) => {
 
 ipcMain.on('save-script', (event, data) => {
   if (data !== null) {
+
+    let filename = data.name;
+    if (data.name.split(';').length > 1) {
+      filename = data.name.split(';')[0];
+    }
+
     dialog.showSaveDialog(mainWindow, {
       title: 'Save Script',
-      defaultPath: data.name,
+      defaultPath: filename,
       filters: [{
         name: '.txt', extensions: ['txt']
       }]

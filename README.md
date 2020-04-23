@@ -17,9 +17,9 @@ As the Windows binary is unsigned, you'll get the Windows Defender warning when 
 
 On your first start, Ren'Dot will ask you for a directory to place produced JSON dialogues.
 
-Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot.
+Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot. Your script will also be auto-saved so parse often!
 
-**Don't forget to save your text script after you're done parsing!**
+**Pending update**: Categorize scripts automatically by specifying a folder name behind a semicolon in the script's name, eg. 'Script Name; Folder Name'. 
 
 ### Script Structure
 
