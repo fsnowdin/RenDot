@@ -6,6 +6,7 @@ document.querySelector('form').addEventListener('submit', (event) => {
     name: document.querySelector('#script_name').value,
     script: document.querySelector('#script').value
   });
+  document.querySelector('#script').focus();
 });
 
 ipcRenderer.on('open-script', (event, data) => {
@@ -15,14 +16,13 @@ ipcRenderer.on('open-script', (event, data) => {
       if (result === 1) {
         document.querySelector('#script_name').value = data.name;
         document.querySelector('#script').value = data.value;
-      } else {
-
       }
     });
   } else {
     document.querySelector('#script_name').value = data.name;
     document.querySelector('#script').value = data.value;
   }
+  document.querySelector('#script').focus();
 });
 
 ipcRenderer.on('empty-check', (event, data) => {
@@ -34,4 +34,5 @@ ipcRenderer.on('empty-check', (event, data) => {
   } else {
     ipcRenderer.send('save-script', null);
   }
+  document.querySelector('#script').focus();
 });

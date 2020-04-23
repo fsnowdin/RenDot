@@ -80,8 +80,6 @@ app.on('ready', () => {
   );
   mainWindow.loadFile('./src/index.html');
 
- 
-
   // Check if the JSON output directory is specified
   if (!file_handler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
     dialog.showMessageBoxSync(mainWindow, {
