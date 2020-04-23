@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
-const { basename, extname, join } = require('path');
+const { basename, extname, join, dirname } = require('path');
 
 const file_handler = require('../lib/data.js');
 const parser = require('../lib/parser.js');
@@ -20,9 +20,15 @@ const init_menu = [
           }],
           properties: ['openFile']
         }).then((file_object) => {
+          if (file_object.canceled) return;
           // Set the editor's text to the new script text
+          // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
+          let filename = basename(file_object.filePaths[0], extname(file_object.filePaths[0]));
+          if (dirname(dirname(file_object.filePaths[0])) === join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')) {
+            filename += `; ${basename(dirname(file_object.filePaths[0]))}`;
+          }
           mainWindow.webContents.send('open-script', {
-            name: basename(file_object.filePaths[0], extname(file_object.filePaths[0])),
+            name: filename,
             value: file_handler.readSync(file_object.filePaths[0])
           });
         }, (err) => {
@@ -39,7 +45,7 @@ const init_menu = [
   {
     label: 'About',
     click: (menuItem, window, event) => {
-      dialog.showMessageBox({
+      dialog.showMessageBox(mainWindow, {
         title: 'About',
         type: 'info',
         message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at " + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + ".",
@@ -49,9 +55,7 @@ const init_menu = [
   },
   {
     label: 'Quit',
-    click: () => {
-      app.quit();
-    }
+    role: 'quit'
   }
 ];
 
@@ -66,15 +70,13 @@ app.on('ready', () => {
       window_size = JSON.parse(file_handler.readSync(join(app.getPath('userData'), 'window_size.json')));
     } catch (err) {
       if (err) {
-        console.log(err);
         window_size = {
           "x": 800,
           "y": 700
         }
       }
     }
-  }
-  else window_size = {
+  } else window_size = {
     "x": 800,
     "y": 700
   }
@@ -146,29 +148,38 @@ app.on('ready', () => {
 });
 
 ipcMain.on('started_parsing', (event, data) => {
-  console.log('Clone the script to Text-Scripts');
+
   const output_dir = file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
-  file_handler.createTextFile(join(join(output_dir, 'Text Scripts'), data.name+'.txt'), data.script, (err) => {
-    if (err) {
-      dialog.showErrorBox('Error', `${err}\nFailed to save the text script.`);
-    }
+
+  let endpath = data.name;
+  if (data.name.split(';').length > 1) {
+    file_handler.mkDir(join(output_dir, 'Text Scripts', data.name.split(';')[1].trim()), (err) => {
+      if (err) dialog.showErrorBox('Error', `${err}\nFailed so create new folder for text script.`);
+    });
+    file_handler.mkDir(join(output_dir, 'JSON Dialogues', data.name.split(';')[1].trim()), (err) => {
+      if (err) dialog.showErrorBox('Error', `${err}\nFailed so create new folder for JSON Dialogue.`);
+    });
+    endpath = join(data.name.split(';')[1].trim(), data.name.split(';')[0].trim());
+  }
+
+  console.log('Clone the script to Text-Scripts');
+  file_handler.createTextFile(join(output_dir, 'Text Scripts', endpath+'.txt'), data.script, (err) => {
+    if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the text script.`);
   });
 
   console.log('Start the process of parsing script.txt');
-  const json_dialogue = parser.parse(data.script);
-  file_handler.create(join(output_dir, 'JSON Dialogues'), data.name, json_dialogue, (err) => {
-    if (err) {
-      dialog.showErrorBox('Error', `${err}\nFailed to save the JSON dialogue.`);
-    }
+  file_handler.create(join(output_dir, 'JSON Dialogues', endpath+'.json'), parser.parse(data.script), (err) => {
+    if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the JSON dialogue.`);
   });
 
   console.log('Finish!');
-  dialog.showMessageBox({
+  dialog.showMessageBox(mainWindow, {
     title: 'Finished!',
     type: 'info',
     message: 'Finished parsing your script.',
     buttons: ['OK']
   });
+
 });
 
 ipcMain.handle('editor-overwrite-confirmation', async (event) => {
