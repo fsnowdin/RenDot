@@ -111,9 +111,9 @@ app.on('ready', () => {
 
   // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
   mainWindow.on('close', (event, exitCode) => {
-    console.log(mainWindow.getSize());
     file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({'x': mainWindow.getSize()[0], 'y': mainWindow.getSize()[1]}));
-  });
+    app.quit();
+  }); 
 
 });
 
