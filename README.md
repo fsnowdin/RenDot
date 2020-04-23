@@ -22,8 +22,6 @@ Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script
 
 TODO: Write proper documentation for how to write scripts for Ren'Dot.
 ```
-NAME: Example-Script 
-// The name above will be the name of the output JSON file and the clone script in Text-Scripts
 // You can explain things or write notes with by using '//' to comment
 Player, neutral: "Hello there, this is a dialogue."
 Player, neutral: "How about we have a 3-second moment of silence?"
