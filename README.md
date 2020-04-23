@@ -3,7 +3,7 @@
 ![screenshot](./assets/screenshot.png)
 
 
-**NOTE: This is my own custom version of the parser meant for use within my own games. It contains support for monologues and custom character expressions. However, these changes have to be accompanied by changes to the Godot Dialogue System addon itself so I have made the master branch the general parser for default use.**
+**NOTE: This is my own custom version of the parser meant for use within my own games. It contains support for monologues and custom character expressions. However, these changes have to be accompanied by changes to the Godot Dialogue System addon itself so I have made the 'general' branch the parser for default use. Note that it still uses the old Python parser.**
 
 A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
 
