@@ -59,10 +59,18 @@ app.on('ready', () => {
   const menu = Menu.buildFromTemplate(init_menu);
   Menu.setApplicationMenu(menu);
 
+  let window_size;
+  // Set window size to window size in previous session
+  if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) window_size = file_handler.readSync(join(app.getPath('userData'), 'window_size.json')); 
+  else window_size = {
+    'x': 800,
+    'y': 700
+  }
+
   mainWindow = new BrowserWindow(
     {
-      width: 800,
-      height: 700,
+      width: window_size.x,
+      height: window_size.y,
       backgroundColor: '#1d1d1d',
       icon: './assets/icon.ico',
       show: true,
@@ -71,6 +79,8 @@ app.on('ready', () => {
     }
   );
   mainWindow.loadFile('./src/index.html');
+
+ 
 
   // Check if the JSON output directory is specified
   if (!file_handler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
@@ -92,6 +102,13 @@ app.on('ready', () => {
       });
     }
   }
+});
+
+// Save current window size on quit so the next time Ren'Dot starts, it will use this window size
+app.on('quit', (event, exitCode) => {
+  file_handler.create(app.getPath('userData'), 'window_size', {'x': mainWindow.getSize()[0], 'y': mainWindow.getSize()[1]}, (err) => {
+    if (err) console.log('Failed to save window size on quit');
+  });
 });
 
 ipcMain.on('started_parsing', (event, data) => {
