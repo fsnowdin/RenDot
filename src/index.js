@@ -139,9 +139,8 @@ ipcMain.on('save-script', (event, data) => {
       }]
     }).then((result) => {
       if (result.canceled) return;
-      console.log('path');
-      console.log(result.filePath);
-      file_handler.createTextFile(result.filePath+'.txt', data.script, (err) => {
+      if (extname(result.filePath) !== '.txt') result.filePath += '.txt';
+      file_handler.createTextFile(result.filePath, data.script, (err) => {
         if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
         else {
           dialog.showMessageBox({
