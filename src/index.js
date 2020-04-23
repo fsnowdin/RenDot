@@ -99,6 +99,24 @@ app.on('ready', () => {
     }
   }
 
+  // Check if output directory still exists
+  if (!file_handler.existsSync(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')))) {
+    dialog.showMessageBoxSync(mainWindow, {
+      title: "Can't detect output directory",
+      type: 'error',
+      buttons: ['OK'],
+      message: "Ren'Dot couldn't detect your output directory as it might have been moved elsewhere.\nPlease choose a new directory to store your Ren'Dot scripts."
+    });
+    const result = dialog.showOpenDialogSync(mainWindow, {
+      properties: ['openDirectory']
+    });
+    if (result !== undefined) {
+      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+    } else {
+      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
+    }
+  }
+
   // Create 2 folders for storing JSON dialogues and text scripts if they don't exist already
   file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'), (err) => {
     if (err) dialog.showErrorBox('Error', 'Failed to intialize Text Scripts output directory');
