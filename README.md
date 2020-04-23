@@ -10,6 +10,8 @@ Download the latest zip file [here](https://github.com/tghgg/Ren-Dot/releases), 
 
 ## Usage
 
+![screenshot](./assets/screenshot.png)
+
 As the Windows binary is unsigned, you'll get the Windows Defender warning when starting Ren'Dot, ignore it by clicking on More info then press Run anyway. You're welcomed to not trust the binary.
 
 On your first start, Ren'Dot will ask you for a directory to place produced JSON dialogues.
