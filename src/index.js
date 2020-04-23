@@ -62,11 +62,21 @@ app.on('ready', () => {
   let window_size;
   // Set window size to window size in previous session
   if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) {
-    window_size = JSON.parse(file_handler.readSync(join(app.getPath('userData'), 'window_size.json')));
+    try {
+      window_size = JSON.parse(file_handler.readSync(join(app.getPath('userData'), 'window_size.json')));
+    } catch (err) {
+      if (err) {
+        console.log(err);
+        window_size = {
+          "x": 800,
+          "y": 700
+        }
+      }
+    }
   }
   else window_size = {
-    'x': 800,
-    'y': 700
+    "x": 800,
+    "y": 700
   }
 
   mainWindow = new BrowserWindow(
@@ -129,7 +139,7 @@ app.on('ready', () => {
 
   // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
   mainWindow.on('close', (event, exitCode) => {
-    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({'x': mainWindow.getSize()[0], 'y': mainWindow.getSize()[1]}));
+    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({"x": mainWindow.getSize()[0], "y": mainWindow.getSize()[1]}));
     app.quit();
   }); 
 
