@@ -6,17 +6,41 @@
 input {
     color: white;
     font-family: 'Roboto', sans-serif;
-    background-color: black;
+    background-color: #1d1d1d;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: groove;
 }
 
 textarea {
     overflow-y: auto;
     font-family: 'Roboto', sans-serif;
     color: white;
-    background-color: black;
+    background-color: #1d1d1d;
     height: auto;
 }
 
 body {
     text-align: center;
 }
+
+button {
+	background-color:transparent;
+	border:1px solid #525252;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: monospace, 'Roboto';
+	font-size: 1rem;
+	padding:5px 7px;
+	text-decoration:none;
+}
+button:hover {
+	background-color:transparent;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+

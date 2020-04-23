@@ -41,7 +41,7 @@ const init_menu = [
     click: (menuItem, window, event) => {
       dialog.showMessageBox({
         title: 'About',
-        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/Text-to-JSON-Parser\nYou can find your Ren'Dot output directory in your: AppData\\rendot\\output_dir.txt if you're on Windows",
+        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/RenDot\nYou can find your Ren'Dot output directory in your AppData\\rendot\\output_dir.txt if you're on Windows",
         buttons: ['Close']
       });
     }
@@ -63,7 +63,7 @@ app.on('ready', () => {
     {
       width: 800,
       height: 700,
-      backgroundColor: '#000',
+      backgroundColor: '#1d1d1d',
       icon: './assets/icon.ico',
       show: true,
       webPreferences: { nodeIntegration: true },
