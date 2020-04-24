@@ -60,6 +60,7 @@ const init_menu = [
 ];
 
 app.on('ready', () => {
+
   const menu = Menu.buildFromTemplate(init_menu);
   Menu.setApplicationMenu(menu);
 
@@ -156,10 +157,10 @@ ipcMain.on('started_parsing', (event, data) => {
   let endpath = data.name;
   if (data.name.split(';').length > 1) {
     file_handler.mkDir(join(output_dir, 'Text Scripts', data.name.split(';')[1].trim()), (err) => {
-      if (err) dialog.showErrorBox('Error', `${err}\nFailed so create new folder for text script.`);
+      if (err) dialog.showErrorBox('Error', `${err}\nFailed to create new folder for text script.`);
     });
     file_handler.mkDir(join(output_dir, 'JSON Dialogues', data.name.split(';')[1].trim()), (err) => {
-      if (err) dialog.showErrorBox('Error', `${err}\nFailed so create new folder for JSON Dialogue.`);
+      if (err) dialog.showErrorBox('Error', `${err}\nFailed to create new folder for JSON Dialogue.`);
     });
     endpath = join(data.name.split(';')[1].trim(), data.name.split(';')[0].trim());
   }
