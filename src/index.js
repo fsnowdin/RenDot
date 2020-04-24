@@ -48,7 +48,7 @@ const init_menu = [
       dialog.showMessageBox(mainWindow, {
         title: 'About',
         type: 'info',
-        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + ".\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at " + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + ".",
+        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at ' + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
         buttons: ['Close']
       });
     }
@@ -60,7 +60,6 @@ const init_menu = [
 ];
 
 app.on('ready', () => {
-
   const menu = Menu.buildFromTemplate(init_menu);
   Menu.setApplicationMenu(menu);
 
@@ -74,14 +73,16 @@ app.on('ready', () => {
     } catch (err) {
       if (err) {
         window_size = {
-          "x": 800,
-          "y": 700
-        }
+          x: 800,
+          y: 700
+        };
       }
     }
-  } else window_size = {
-    "x": 800,
-    "y": 700
+  } else {
+    window_size = {
+      x: 800,
+      y: 700
+    };
   }
 
   mainWindow = new BrowserWindow(
@@ -144,14 +145,12 @@ app.on('ready', () => {
 
   // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
   mainWindow.on('close', (event, exitCode) => {
-    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({"x": mainWindow.getSize()[0], "y": mainWindow.getSize()[1]}));
+    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({ x: mainWindow.getSize()[0], y: mainWindow.getSize()[1] }));
     app.quit();
-  }); 
-
+  });
 });
 
 ipcMain.on('started_parsing', (event, data) => {
-
   const output_dir = file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
 
   let endpath = data.name;
@@ -166,12 +165,12 @@ ipcMain.on('started_parsing', (event, data) => {
   }
 
   console.log('Clone the script to Text-Scripts');
-  file_handler.createTextFile(join(output_dir, 'Text Scripts', endpath+'.txt'), data.script, (err) => {
+  file_handler.createTextFile(join(output_dir, 'Text Scripts', endpath + '.txt'), data.script, (err) => {
     if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the text script.`);
   });
 
   console.log('Start the process of parsing script.txt');
-  file_handler.create(join(output_dir, 'JSON Dialogues', endpath+'.json'), parser.parse(data.script), (err) => {
+  file_handler.create(join(output_dir, 'JSON Dialogues', endpath + '.json'), parser.parse(data.script), (err) => {
     if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the JSON dialogue.`);
   });
 
@@ -182,7 +181,6 @@ ipcMain.on('started_parsing', (event, data) => {
     message: 'Parsing complete.\nYour script has been auto-saved.',
     buttons: ['OK']
   });
-
 });
 
 ipcMain.handle('editor-overwrite-confirmation', async (event) => {
@@ -198,7 +196,6 @@ ipcMain.handle('editor-overwrite-confirmation', async (event) => {
 
 ipcMain.on('save-script', (event, data) => {
   if (data !== null) {
-
     let filename = data.name;
     if (data.name.split(';').length > 1) {
       filename = data.name.split(';')[0];
