@@ -9,7 +9,7 @@ A parser that takes in a Ren'Py-like text script and parse it into a JSON file f
 
 ## Installation
 
-Download the latest file suitable for your operating system [here](https://github.com/tghgg/Ren-Dot/releases), extract it if it's a zip, and run the executable.
+Download the latest Ren'Dot version suitable for your operating system [here](https://github.com/tghgg/RenDot/releases).
 
 ## Usage
 
@@ -19,7 +19,7 @@ On your first start, Ren'Dot will ask you for a directory to place produced JSON
 
 Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot. Your script will also be auto-saved so parse often!
 
-**Pending update**: Categorize scripts automatically by specifying a folder name behind a semicolon in the script's name, eg. 'Script Name; Folder Name'. 
+**Pending update**: Categorize scripts automatically by specifying a folder name behind a semicolon in the script's name, eg. 'Script Name; Folder Name'.
 
 ### Script Structure
 
@@ -32,11 +32,11 @@ wait: 3
 Player, neutral: "Let's log something to the console!"
 // Execute GDScript inside the Godot Engine
 execute: print('Hello world!')
-Player, happy: "How about that!" 
+Player, happy: "How about that!"
 // 3 basic character expressions currently: Neutral, Happy, Sad; more can be added
-Player, sad: "I can only make 3 faces unfornately..." 
+Player, sad: "I can only make 3 faces unfornately..."
 // Monologue which means there are no face sprite in the dialogue box
-mono: It's okay though. When I'm in my head, the possibilities are endless! 
+mono: It's okay though. When I'm in my head, the possibilities are endless!
 // We can add a new character quite easily
 New-Character, neutral: "Hi! I'm new here!"
 ```
