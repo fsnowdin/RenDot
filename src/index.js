@@ -42,6 +42,23 @@ const init_menu = [
       click: () => {
         mainWindow.webContents.send('empty-check');
       }
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Change Output Directory',
+      click: () => {
+        const result = dialog.showOpenDialogSync(mainWindow, {
+          properties: ['openDirectory']
+        });
+        if (result !== undefined) {
+          file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+          dialog.showMessageBox(mainWindow, {
+            message: 'Rebase successful.\nYour new output directory is ' + result[0],
+            type: 'info',
+            buttons: ['OK']
+          });
+        }
+      }
     }]
   },
   {
