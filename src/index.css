@@ -8,6 +8,10 @@ input {
     border-bottom-style: groove;
 }
 
+textarea:focus, input:focus {
+    outline: none;
+}
+
 textarea {
     overflow-y: auto;
     font-family: 'Roboto', sans-serif;
