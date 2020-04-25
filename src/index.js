@@ -49,7 +49,8 @@ const init_menu = [
       dialog.showMessageBox(mainWindow, {
         title: 'About',
         type: 'info',
-        message: "Ren'Dot by Choppa2\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at ' + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
+        icon: './assets/fsnowdin.png',
+        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at ' + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
         buttons: ['Close']
       });
     }
