@@ -19,7 +19,7 @@ On your first start, Ren'Dot will ask you for a directory to place produced JSON
 
 Write your script in the Ren'Dot editor. When you're done, hit the 'Parse Script' button and the output JSON dialogue will appear in the folder you chose when you first started Ren'Dot. Your script will also be auto-saved so parse often!
 
-**Pending update**: Categorize scripts automatically by specifying a folder name behind a semicolon in the script's name, eg. 'Script Name; Folder Name'.
+Categorize scripts automatically by specifying a folder name behind a semicolon in the script's name, eg. 'Script Name; Folder Name'.
 
 ### Script Structure
 
