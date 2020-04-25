@@ -19,7 +19,8 @@ const init_menu = [
           }, {
             name: 'All Files', extensions: ['*']
           }],
-          properties: ['openFile']
+          properties: ['openFile'],
+          defaultPath: join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
         }).then((file_object) => {
           if (file_object.canceled) return;
           // Set the editor's text to the new script text
@@ -198,9 +199,9 @@ ipcMain.handle('editor-overwrite-confirmation', async (event) => {
 
 ipcMain.on('save-script', (event, data) => {
   if (data !== null) {
-    let filename = data.name;
+    let filename = join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name);
     if (data.name.split(';').length > 1) {
-      filename = data.name.split(';')[0];
+      filename = join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name.split(';')[1].trim(), data.name.split(';')[0]);
     }
 
     dialog.showSaveDialog(mainWindow, {
