@@ -1,3 +1,4 @@
+'use strict';
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const { basename, extname, join, dirname } = require('path');
 
