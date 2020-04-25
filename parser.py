@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-import json
-import os
+from json import dump
 from PyQt5.QtWidgets import *
 
 # Bring up the GUI 
@@ -22,8 +21,6 @@ window.setLayout(layout)
 filename =''
 def open_file_dialog():
     # Declare variables
-    out_script_name = "script"
-    out_script = 0
     node = [{  # node[0]['nodes']
         "characters": [],
         "nodes": [{"next": "1", "node_name": "START", "node_type": "start"}],
@@ -31,10 +28,7 @@ def open_file_dialog():
         "variables": {},
         "editor_version": "2.1"
     }]
-    characters = []
-    variables = []
     current_node_index = 1
-    final_found_flag = False
     # Open the file dialog
     filename = filepicker.getOpenFileName()
     # Identify the file to be parsed
@@ -58,13 +52,7 @@ def open_file_dialog():
                     "node_type": "execute",
                     "next": str(current_node_index+1)
                 }
-                # check for final key for finalizing the script
-                if ("final" not in line.split(":")[0]):
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
-                elif ("final" in line.split(":")[0]):
-                    final_found_flag = True
-                    current_node["next"] = None
+                current_node_index += 1
                 node[0]["nodes"].append(current_node.copy())
 
             # Conditional branching implementation
@@ -94,13 +82,7 @@ def open_file_dialog():
                     "node_type": "wait",
                     "next": str(current_node_index+1)
                 }
-                if ("final" not in line.split(":")[0]):
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
-                elif ("final" in line.split(":")[0]):
-                    final_found_flag = True
-                    current_node["next"] = None
-                # append current_node the the output_script node object
+                current_node_index += 1
                 node[0]["nodes"].append(current_node.copy())
 
             # Set variables in scripts
@@ -151,14 +133,7 @@ def open_file_dialog():
                         "type": var_type,
                         "value": current_node["value"]
                     }
-                # check for final key for finalizing the script
-                if ("final" not in line.split(":")[0]):
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
-                elif ("final" in line.split(":")[0]):
-                    final_found_flag = True
-                    current_node["next"] = None
-                # append current_node the the output_script node object
+                current_node_index += 1
                 node[0]["nodes"].append(current_node.copy())
 
             # Normal box/bubble dialogue with a face sprite
@@ -190,13 +165,7 @@ def open_file_dialog():
                 new_text["ENG"] = text
                 current_node["node_name"] = str(current_node_index)
                 current_node["node_type"] = "show_message"
-                # check for final key for finalizing the script
-                if ("final" not in keys):
-                    current_node_index += 1
-                    current_node["next"] = str(current_node_index)
-                elif ("final" in keys):
-                    final_found_flag = True
-                    current_node["next"] = None
+
                 # check for bubble dialogue
                 # 2 types of bubble dialogue: no slide camera and slide camera
                 # bubble depends on matching character names in the script file...
@@ -208,21 +177,13 @@ def open_file_dialog():
                     current_node["is_box"] = False
                     current_node["slide_camera"] = True
                     current_node["face"] = None
-                # append current_node the the output_script node object
+                current_node_index += 1
                 node[0]["nodes"].append(current_node.copy())
-        # Check for final key in the last script line
-        # Add it in automatically if the script doesn't have one
-        if (final_found_flag):
-            with open(output_script_name, "w") as output_script:
-                json.dump(node, output_script)
-                print("Finished parsing %s" % output_script.name)
-                output_script.close()
-        else:
-            node[0]['nodes'][current_node_index-1]["next"] = None
-            with open(output_script_name, "w") as output_script:
-                json.dump(node, output_script)
-                print("Finished parsing %s" % output_script.name)
-                output_script.close()
+        node[0]['nodes'][current_node_index-1]["next"] = None
+        with open("./JSON Dialogues/%s" % output_script_name, "w") as output_script:
+            dump(node, output_script)
+            print("Finished parsing %s" % output_script.name)
+            output_script.close()
         # Send finish message
         finish_message = QMessageBox(window)
         finish_message.setText('Finished parsing %s' % input_script_name.split('/')[len(input_script_name.split('/'))-1])

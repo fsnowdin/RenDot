@@ -1,4 +1,5 @@
 NAME: Example-Script
+// The above will be the name of the output JSON file
 // You can explain things or write notes with by using '//' to comment
 Player: "Hello there, this is a dialogue."
 Player: "How about we have a 3-second moment of silence?"
@@ -8,4 +9,4 @@ Player: "Let's log something to the console!"
 execute: print('Hello world!')
 Player: "How about that!" 
 // We can add a new character quite easily!
-New-Character, final: "Just be sure to add a final key to the last line!"
+New-Character: "Hi! I'm new here!"

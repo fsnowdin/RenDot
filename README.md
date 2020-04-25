@@ -1,4 +1,4 @@
-# Text-to-JSON-Parser
+# Ren'Dot
 
 A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
 
@@ -14,17 +14,18 @@ TODO: Write proper documentation for how to write scripts for the parser.
 
 Write your script in the script.txt file. Here's an example script:
 ```
-NAME: Example-Script // This will be the name of the output JSON file
-// You can explain things or write notes with by using '//' to comment
+NAME: Example-Script
+// The above will be the name of the output JSON file
+// You can explain things or write notes by using '//' to comment
 Player: "Hello there, this is a dialogue."
 Player: "How about we have a 3-second moment of silence?"
-wait: 3 
+wait: 3
 Player: "Let's log something to the console!"
 // Execute GDScript inside the Godot Engine
 execute: print('Hello world!')
 Player: "How about that!" 
 // We can add a new character quite easily!
-New-Character, final: "Just be sure to add a final key to the last line!"
+New-Character: "Hi! I'm new here!"
 ```
 Run parser.py to export the script as a JSON file for use with radmatt's [Godot Dialogue System](https://radmatt.itch.io/godot-dialogue-system).
 
