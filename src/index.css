@@ -6,6 +6,7 @@ input {
     border-right-style: hidden;
     border-left-style: hidden;
     border-bottom-style: groove;
+    padding-bottom: 0;
 }
 
 textarea:focus, input:focus {
@@ -18,6 +19,9 @@ textarea {
     color: white;
     background-color: #1d1d1d;
     height: auto;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 body {
@@ -26,7 +30,7 @@ body {
 
 button {
 	background-color:transparent;
-	border:1px solid #525252;
+    border:1px solid #525252;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
