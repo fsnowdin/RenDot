@@ -30,7 +30,7 @@
   "author": "Falling Snowdin",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^8.2.3",
+    "electron": "^8.3.1",
     "electron-builder": "^22.5.1",
     "semistandard": "^14.2.0"
   }
