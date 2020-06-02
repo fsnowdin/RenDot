@@ -2,36 +2,36 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const { basename, extname, join, dirname } = require('path');
 
-const file_handler = require('../lib/data.js');
-const parser = require('../lib/parser.js');
+const DataHandler = require('../lib/data.js');
+const Parser = require('../lib/parser.js');
 
-let mainWindow;
+let MainWindow;
 
-const init_menu = [
+const MENU = [
   {
     label: 'File',
     submenu: [{
       label: 'Open Script',
       click: () => {
-        dialog.showOpenDialog(mainWindow, {
+        dialog.showOpenDialog(MainWindow, {
           filters: [{
             name: '.txt', extensions: ['txt']
           }, {
             name: 'All Files', extensions: ['*']
           }],
           properties: ['openFile'],
-          defaultPath: join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
+          defaultPath: join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
         }).then((file_object) => {
           if (file_object.canceled) return;
           // Set the editor's text to the new script text
           // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
           let filename = basename(file_object.filePaths[0], extname(file_object.filePaths[0]));
-          if (dirname(dirname(file_object.filePaths[0])) === join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')) {
+          if (dirname(dirname(file_object.filePaths[0])) === join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')) {
             filename += `; ${basename(dirname(file_object.filePaths[0]))}`;
           }
-          mainWindow.webContents.send('open-script', {
+          MainWindow.webContents.send('open-script', {
             name: filename,
-            value: file_handler.readSync(file_object.filePaths[0])
+            value: DataHandler.readSync(file_object.filePaths[0])
           });
         }, (err) => {
           if (err) dialog.showErrorBox('Error', 'Failed to open new script');
@@ -40,19 +40,19 @@ const init_menu = [
     }, {
       label: 'Save Script',
       click: () => {
-        mainWindow.webContents.send('empty-check');
+        MainWindow.webContents.send('empty-check');
       }
     }, {
       type: 'separator'
     }, {
       label: 'Change Output Directory',
       click: () => {
-        const result = dialog.showOpenDialogSync(mainWindow, {
+        const result = dialog.showOpenDialogSync(MainWindow, {
           properties: ['openDirectory']
         });
         if (result !== undefined) {
-          file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
-          dialog.showMessageBox(mainWindow, {
+          DataHandler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+          dialog.showMessageBox(MainWindow, {
             message: 'Rebase successful.\nYour new output directory is ' + result[0],
             type: 'info',
             buttons: ['OK']
@@ -64,11 +64,11 @@ const init_menu = [
   {
     label: 'About',
     click: (menuItem, window, event) => {
-      dialog.showMessageBox(mainWindow, {
+      dialog.showMessageBox(MainWindow, {
         title: 'About',
         type: 'info',
         icon: './assets/fsnowdin.png',
-        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at ' + file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
+        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/RenDot\nYour files are saved at ' + DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
         buttons: ['Close']
       });
     }
@@ -80,35 +80,23 @@ const init_menu = [
 ];
 
 app.on('ready', () => {
-  const menu = Menu.buildFromTemplate(init_menu);
-  Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(Menu.buildFromTemplate(MENU));
 
   app.allowRendererProcessReuse = true;
 
-  let window_size;
+  let windowSize = {
+    x: 800,
+    y: 700
+  };
   // Set window size to window size in previous session
-  if (file_handler.existsSync(join(app.getPath('userData'), 'window_size.json'))) {
-    try {
-      window_size = JSON.parse(file_handler.readSync(join(app.getPath('userData'), 'window_size.json')));
-    } catch (err) {
-      if (err) {
-        window_size = {
-          x: 800,
-          y: 700
-        };
-      }
-    }
-  } else {
-    window_size = {
-      x: 800,
-      y: 700
-    };
+  if (DataHandler.existsSync(join(app.getPath('userData'), 'window_size.json'))) {
+    windowSize = JSON.parse(DataHandler.readSync(join(app.getPath('userData'), 'window_size.json')));
   }
 
-  mainWindow = new BrowserWindow(
+  MainWindow = new BrowserWindow(
     {
-      width: window_size.x,
-      height: window_size.y,
+      width: windowSize.x,
+      height: windowSize.y,
       backgroundColor: '#1d1d1d',
       icon: './assets/icon.ico',
       show: false,
@@ -116,86 +104,86 @@ app.on('ready', () => {
       enableRemoteModule: false
     }
   );
-  mainWindow.loadFile('./src/index.html');
+  MainWindow.loadFile('./src/index.html');
 
   // Check if the JSON output directory is specified
-  if (!file_handler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
-    dialog.showMessageBoxSync(mainWindow, {
+  if (!DataHandler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
+    dialog.showMessageBoxSync(MainWindow, {
       title: "Welcome to Ren'Dot",
       buttons: ['OK'],
       message: "Since this is your first time using Ren'Dot, you will need to choose a directory to place your output JSON files.\nDon't worry, you will need to do this just once."
     });
-    const result = dialog.showOpenDialogSync(mainWindow, {
+    const result = dialog.showOpenDialogSync(MainWindow, {
       properties: ['openDirectory']
     });
     if (result !== undefined) {
-      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+      DataHandler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
     } else {
-      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
+      DataHandler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
     }
   }
 
   // Check if output directory still exists
-  if (!file_handler.existsSync(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')))) {
-    dialog.showMessageBoxSync(mainWindow, {
+  if (!DataHandler.existsSync(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')))) {
+    dialog.showMessageBoxSync(MainWindow, {
       title: "Can't detect output directory",
       type: 'error',
       buttons: ['OK'],
       message: "Ren'Dot couldn't detect your output directory as it might have been moved elsewhere.\nPlease choose a new directory to store your Ren'Dot scripts."
     });
-    const result = dialog.showOpenDialogSync(mainWindow, {
+    const result = dialog.showOpenDialogSync(MainWindow, {
       properties: ['openDirectory']
     });
     if (result !== undefined) {
-      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+      DataHandler.createSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
     } else {
-      file_handler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
+      DataHandler.createSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
     }
   }
 
   // Create 2 folders for storing JSON dialogues and text scripts if they don't exist already
-  file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'), (err) => {
+  DataHandler.mkDir(join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'JSON Dialogues'), (err) => {
     if (err) dialog.showErrorBox('Error', 'Failed to intialize Text Scripts output directory');
   });
-  file_handler.mkDir(join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts'), (err) => {
+  DataHandler.mkDir(join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts'), (err) => {
     if (err) dialog.showErrorBox('Error', 'Failed to intialize JSON Dialogues output directory');
   });
 
-  mainWindow.show();
+  MainWindow.show();
 
   // Save current window size on quit so the next time Ren'Dot starts, it will use this window size
-  mainWindow.on('close', (event, exitCode) => {
-    file_handler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({ x: mainWindow.getSize()[0], y: mainWindow.getSize()[1] }));
+  MainWindow.on('close', (event, exitCode) => {
+    DataHandler.createSync(join(app.getPath('userData'), 'window_size.json'), JSON.stringify({ x: MainWindow.getSize()[0], y: MainWindow.getSize()[1] }));
     app.quit();
   });
 });
 
 ipcMain.on('started_parsing', (event, data) => {
-  const output_dir = file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
+  const output_dir = DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
 
   let endpath = data.name;
   if (data.name.split(';').length > 1) {
-    file_handler.mkDir(join(output_dir, 'Text Scripts', data.name.split(';')[1].trim()), (err) => {
+    DataHandler.mkDir(join(output_dir, 'Text Scripts', data.name.split(';')[1].trim()), (err) => {
       if (err) dialog.showErrorBox('Error', `${err}\nFailed to create new folder for text script.`);
     });
-    file_handler.mkDir(join(output_dir, 'JSON Dialogues', data.name.split(';')[1].trim()), (err) => {
+    DataHandler.mkDir(join(output_dir, 'JSON Dialogues', data.name.split(';')[1].trim()), (err) => {
       if (err) dialog.showErrorBox('Error', `${err}\nFailed to create new folder for JSON Dialogue.`);
     });
     endpath = join(data.name.split(';')[1].trim(), data.name.split(';')[0].trim());
   }
 
   console.log('Clone the script to Text-Scripts');
-  file_handler.createTextFile(join(output_dir, 'Text Scripts', endpath + '.txt'), data.script, (err) => {
+  DataHandler.createTextFile(join(output_dir, 'Text Scripts', endpath + '.txt'), data.script, (err) => {
     if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the text script.`);
   });
 
   console.log('Start the process of parsing script.txt');
-  file_handler.create(join(output_dir, 'JSON Dialogues', endpath + '.json'), parser.parse(data.script), (err) => {
+  DataHandler.create(join(output_dir, 'JSON Dialogues', endpath + '.json'), Parser.parse(data.script), (err) => {
     if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the JSON dialogue.`);
   });
 
   console.log('Finish!');
-  dialog.showMessageBox(mainWindow, {
+  dialog.showMessageBox(MainWindow, {
     title: 'Finished!',
     type: 'info',
     message: 'Parsing complete.\nYour script has been auto-saved.',
@@ -204,7 +192,7 @@ ipcMain.on('started_parsing', (event, data) => {
 });
 
 ipcMain.handle('editor-overwrite-confirmation', async (event) => {
-  const result = await dialog.showMessageBox(mainWindow, {
+  const result = await dialog.showMessageBox(MainWindow, {
     title: 'Confirmation',
     type: 'question',
     buttons: ['Cancel', 'Overwrite'],
@@ -216,12 +204,12 @@ ipcMain.handle('editor-overwrite-confirmation', async (event) => {
 
 ipcMain.on('save-script', (event, data) => {
   if (data !== null) {
-    let filename = join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name);
+    let filename = join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name);
     if (data.name.split(';').length > 1) {
-      filename = join(file_handler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name.split(';')[1].trim(), data.name.split(';')[0]);
+      filename = join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts', data.name.split(';')[1].trim(), data.name.split(';')[0]);
     }
 
-    dialog.showSaveDialog(mainWindow, {
+    dialog.showSaveDialog(MainWindow, {
       title: 'Save Script',
       defaultPath: filename,
       filters: [{
@@ -230,7 +218,7 @@ ipcMain.on('save-script', (event, data) => {
     }).then((result) => {
       if (result.canceled) return;
       if (extname(result.filePath) !== '.txt') result.filePath += '.txt';
-      file_handler.createTextFile(result.filePath, data.script, (err) => {
+      DataHandler.createTextFile(result.filePath, data.script, (err) => {
         if (err) dialog.showErrorBox('Error', `${err}\nFailed to save the script.`);
         else {
           dialog.showMessageBox({
