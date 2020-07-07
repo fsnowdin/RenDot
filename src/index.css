@@ -25,6 +25,7 @@ textarea {
 body {
     text-align: center;
     font-family: Helvetica, Arial, sans-serif;
+    overflow: hidden;
 }
 
 button {
@@ -36,13 +37,16 @@ button {
 	font-family: monospace, 'Roboto';
 	font-size: 1rem;
 	padding:5px 7px;
-	text-decoration:none;
+    text-decoration:none;
 }
 button:hover {
-	background-color:transparent;
+	background-color:gray;
 }
 button:active {
 	position:relative;
 	top:1px;
+}
+button:focus {
+    outline: none;
 }
 
