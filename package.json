@@ -1,7 +1,7 @@
 {
   "name": "rendot",
   "version": "1.1.4",
-  "homepage": "https://github.com/tghgg/RenDot",
+  "homepage": "https://gitlab.com/tghgg/rendot",
   "description": "A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into the Godot Dialogue System by radmatt",
   "main": "src/index.js",
   "scripts": {
