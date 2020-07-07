@@ -1,13 +1,12 @@
 {
   "name": "rendot",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "homepage": "https://github.com/tghgg/RenDot",
   "description": "A parser that takes in a Ren'Py-like text script and parse it into a JSON file for importing into the Godot Dialogue System by radmatt",
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder -wl",
-    "semistandard": "semistandard --fix",
     "pack_windows": "electron-builder -w",
     "pack_linux": "electron-builder -l"
   },
@@ -32,6 +31,11 @@
   "devDependencies": {
     "electron": "^9.0.5",
     "electron-builder": "^22.7.0",
-    "semistandard": "^14.2.0"
+    "eslint": "^7.4.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }
