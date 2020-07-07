@@ -12,14 +12,14 @@
   },
   "build": {
     "appId": "me.rendotparser.RenDot",
-    "productName": "Ren'Dot",
+    "productName": "RenDot",
     "linux": {
       "target": [
         "AppImage"
       ],
       "category": "Development",
       "icon": "./assets/506x504.png",
-      "executableName": "Ren'Dot"
+      "executableName": "RenDot"
     },
     "win": {
       "target": "NSIS",
