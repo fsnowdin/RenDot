@@ -1,6 +1,6 @@
 input {
     color: white;
-    background-color: #1d1d1d;
+    background-color: transparent;
     border-top-style: hidden;
     border-right-style: hidden;
     border-left-style: hidden;
@@ -8,19 +8,22 @@ input {
     padding-bottom: 0;
 }
 
-textarea:focus, input:focus {
-    outline: none;
-}
 
 textarea {
     overflow-y: auto;
     color: white;
-    background-color: #1d1d1d;
+    background-color: transparent;
     height: auto;
     margin-bottom: 5px;
     padding-left: 5px;
     padding-right: 5px;
 }
+
+textarea:focus, input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.733);
+}
+
 
 body {
     text-align: center;
