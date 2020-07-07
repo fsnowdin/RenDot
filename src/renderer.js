@@ -14,7 +14,7 @@ ipcRenderer.on('open-script', (event, data) => {
   if (document.querySelector('#script').value !== '') {
     console.log('Wait!');
     ipcRenderer.invoke('editor-overwrite-confirmation').then((result) => {
-      if (result === 1) {
+      if (result === 0) {
         document.querySelector('#script_name').value = data.name;
         document.querySelector('#script').value = data.value;
       }

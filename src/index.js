@@ -183,8 +183,8 @@ ipcMain.handle('editor-overwrite-confirmation', async (event) => {
   const result = await dialog.showMessageBox(MainWindow, {
     title: 'Confirmation',
     type: 'question',
-    buttons: ['Cancel', 'Overwrite'],
-    defaultId: 0,
+    buttons: ['Overwrite', 'Cancel'],
+    defaultId: 1,
     message: "Do you want to overwrite the current script?\nYour data will be lost if you haven't saved it."
   });
   return result.response;
