@@ -81,7 +81,7 @@ const MENU = [
         title: 'About',
         type: 'info',
         // icon: './assets/fsnowdin.png',
-        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://gitlab.com/tghgg/rendot\nYour files are saved at ' + DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
+        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot\nYour files are saved at ' + DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
         buttons: ['Close']
       });
     }
@@ -93,42 +93,6 @@ const MENU = [
 ];
 
 app.on('ready', () => {
-  // Set global shortcuts
-  globalShortcut.register('CommandOrControl+Shift+A', () => {
-    dialog.showOpenDialog(MainWindow, {
-      filters: [{
-        name: '.txt', extensions: ['txt']
-      }, {
-        name: 'All Files', extensions: ['*']
-      }],
-      properties: ['openFile'],
-      defaultPath: join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
-    }).then((fileObject) => {
-      if (fileObject.canceled) return;
-      // Set the editor's text to the new script text
-      // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
-      let filename = basename(fileObject.filePaths[0], extname(fileObject.filePaths[0]));
-      if (dirname(dirname(fileObject.filePaths[0])) === join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')) {
-        filename += `; ${basename(dirname(fileObject.filePaths[0]))}`;
-      }
-      MainWindow.webContents.send('open-script', {
-        name: filename,
-        value: DataHandler.readSync(fileObject.filePaths[0])
-      });
-    }, (err) => {
-      if (err) dialog.showErrorBox('Error', 'Failed to open new script');
-    });
-  });
-  globalShortcut.register('CommandOrControl+Shift+N', () => {
-    MainWindow.webContents.send('new-script');
-  });
-  globalShortcut.register('CommandOrControl+S', () => {
-    MainWindow.webContents.send('empty-check');
-  });
-  globalShortcut.register('CommandOrControl+Enter', () => {
-    MainWindow.webContents.send('parse');
-  });
-
   Menu.setApplicationMenu(Menu.buildFromTemplate(MENU));
 
   MainWindow = new BrowserWindow(
@@ -265,4 +229,8 @@ ipcMain.on('save-script', (event, data) => {
   } else {
     dialog.showErrorBox('Script Empty', "There's nothing to save.");
   }
+});
+
+ipcMain.on('open-script-shortcut', () => {
+  MENU[0].submenu[1].click();
 });

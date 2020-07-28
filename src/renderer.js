@@ -10,6 +10,12 @@ document.querySelector('form').addEventListener('submit', (event) => {
   document.querySelector('#script').focus();
 });
 
+window.addEventListener('keydown', (event) => {
+  if (event.keyCode === 13 && event.ctrlKey) {
+    document.querySelector('button').click();
+  }
+});
+
 ipcRenderer.on('parse', (event, data) => {
   document.querySelector('button').click();
 });
