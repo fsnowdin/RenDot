@@ -1,5 +1,5 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, globalShortcut } = require('electron');
 const { basename, extname, join, dirname } = require('path');
 
 const DataHandler = require('../lib/data.js');
@@ -11,7 +11,15 @@ const MENU = [
   {
     label: 'File',
     submenu: [{
+      label: 'New Script',
+      accelerator: 'CommandOrControl+Shift+N',
+      click: () => {
+        MainWindow.webContents.send('new-script');
+      }
+    },
+    {
       label: 'Open Script',
+      accelerator: 'CommandOrControl+Shift+A',
       click: () => {
         dialog.showOpenDialog(MainWindow, {
           filters: [{
@@ -39,6 +47,7 @@ const MENU = [
       }
     }, {
       label: 'Save Script',
+      accelerator: 'CommandOrControl+S',
       click: () => {
         MainWindow.webContents.send('empty-check');
       }
@@ -84,6 +93,42 @@ const MENU = [
 ];
 
 app.on('ready', () => {
+  // Set global shortcuts
+  globalShortcut.register('CommandOrControl+Shift+A', () => {
+    dialog.showOpenDialog(MainWindow, {
+      filters: [{
+        name: '.txt', extensions: ['txt']
+      }, {
+        name: 'All Files', extensions: ['*']
+      }],
+      properties: ['openFile'],
+      defaultPath: join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
+    }).then((fileObject) => {
+      if (fileObject.canceled) return;
+      // Set the editor's text to the new script text
+      // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
+      let filename = basename(fileObject.filePaths[0], extname(fileObject.filePaths[0]));
+      if (dirname(dirname(fileObject.filePaths[0])) === join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')) {
+        filename += `; ${basename(dirname(fileObject.filePaths[0]))}`;
+      }
+      MainWindow.webContents.send('open-script', {
+        name: filename,
+        value: DataHandler.readSync(fileObject.filePaths[0])
+      });
+    }, (err) => {
+      if (err) dialog.showErrorBox('Error', 'Failed to open new script');
+    });
+  });
+  globalShortcut.register('CommandOrControl+Shift+N', () => {
+    MainWindow.webContents.send('new-script');
+  });
+  globalShortcut.register('CommandOrControl+S', () => {
+    MainWindow.webContents.send('empty-check');
+  });
+  globalShortcut.register('CommandOrControl+Enter', () => {
+    MainWindow.webContents.send('parse');
+  });
+
   Menu.setApplicationMenu(Menu.buildFromTemplate(MENU));
 
   MainWindow = new BrowserWindow(

@@ -10,6 +10,10 @@ document.querySelector('form').addEventListener('submit', (event) => {
   document.querySelector('#script').focus();
 });
 
+ipcRenderer.on('parse', (event, data) => {
+  document.querySelector('button').click();
+});
+
 ipcRenderer.on('open-script', (event, data) => {
   if (document.querySelector('#script').value !== '') {
     console.log('Wait!');
@@ -36,4 +40,11 @@ ipcRenderer.on('empty-check', (event, data) => {
     ipcRenderer.send('save-script', null);
   }
   document.querySelector('#script').focus();
+});
+
+// Refresh
+ipcRenderer.on('new-script', (event, data) => {
+  document.getElementById('script_name').value = '';
+  document.getElementById('script').value = '';
+  document.getElementById('script_name').focus();
 });
