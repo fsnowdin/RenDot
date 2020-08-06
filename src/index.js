@@ -1,9 +1,12 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, dialog, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const { basename, extname, join, dirname } = require('path');
 
 const DataHandler = require('../lib/data.js');
 const Parser = require('../lib/parser.js');
+const Promptr = require('../lib/promptr/prompt.js');
+
+const EMOTES_LIST_PATH = join(app.getPath('userData'), 'emotes.json');
 
 let MainWindow;
 
@@ -72,6 +75,79 @@ const MENU = [
           });
         }
       }
+    }, {
+      label: 'Add Emote',
+      click: () => {
+        dialog.showMessageBoxSync(MainWindow, {
+          title: 'Current Emotes',
+          type: 'info',
+          message: Parser.Emotes.listCurrentEmotes(),
+          buttons: ['Close']
+        });
+        Promptr.prompt('What is the new emote?').then((newEmote) => {
+          Promptr.prompt(`What is ${newEmote}'s index?`).then((index) => {
+            if (index > 0) {
+              Parser.Emotes.addEmote(newEmote, index);
+              DataHandler.update(EMOTES_LIST_PATH, Parser.Emotes, (err) => {
+                if (!err) {
+                  dialog.showMessageBox(MainWindow, {
+                    title: 'New Emote Added',
+                    type: 'info',
+                    message: `Emote ${newEmote} with the index ${index} was successfully added.`,
+                    buttons: ['Close']
+                  });
+                } else {
+                  dialog.showMessageBox(MainWindow, {
+                    title: 'Could Not Add Emote',
+                    type: 'error',
+                    message: err,
+                    buttons: ['Close']
+                  });
+                }
+              });
+            }
+          });
+        });
+      }
+    }, {
+      label: 'Delete Emote',
+      click: () => {
+        dialog.showMessageBoxSync(MainWindow, {
+          title: 'Current Emotes',
+          type: 'info',
+          message: Parser.Emotes.listCurrentEmotes(),
+          buttons: ['Close']
+        });
+        Promptr.prompt('What is the emote you want to remove?').then((emote) => {
+          if (emote in Parser.Emotes) {
+            Parser.Emotes.deleteEmoteByName(emote);
+            DataHandler.update(EMOTES_LIST_PATH, Parser.Emotes, (err) => {
+              if (!err) {
+                dialog.showMessageBox(MainWindow, {
+                  title: 'Emote Deleted Successfully',
+                  type: 'info',
+                  message: `Emote ${emote} was successfully added.`,
+                  buttons: ['Close']
+                });
+              } else {
+                dialog.showMessageBox(MainWindow, {
+                  title: 'Could Not Delete Emote',
+                  type: 'error',
+                  message: err,
+                  buttons: ['Close']
+                });
+              }
+            });
+          } else {
+            dialog.showMessageBox(MainWindow, {
+              title: 'Could Not Find Emote',
+              type: 'error',
+              message: `Emote ${emote} does not exist.`,
+              buttons: ['Close']
+            });
+          }
+        });
+      }
     }]
   },
   {
@@ -100,7 +176,7 @@ app.on('ready', () => {
       width: 800,
       height: 700,
       backgroundColor: '#1d1d1d',
-      // icon: './assets/icon.ico',
+      icon: './assets/icon.ico',
       show: false,
       webPreferences: { nodeIntegration: true },
       enableRemoteModule: false
@@ -108,10 +184,31 @@ app.on('ready', () => {
   );
   MainWindow.loadFile('./src/index.html');
 
+  // Initialize the JSON Emotes list
+  if (!DataHandler.existsSync(join(app.getPath('userData'), 'Emotes.json'))) {
+    DataHandler.create(join(app.getPath('userData'), 'Emotes.json'), JSON.stringify(Parser.DEFAULT_EMOTES), (err) => {
+      if (err) {
+        dialog.showMessageBox(MainWindow, {
+          title: 'Error',
+          buttons: ['Close'],
+          type: 'error',
+          message: 'Could not initialize emote list.'
+        });
+      }
+    });
+  } else {
+    DataHandler.read(join(app.getPath('userData'), 'Emotes.json'), (data) => {
+      if (data) {
+        Parser.Emotes = JSON.parse(data);
+      }
+    });
+  }
+
   // Check if the JSON output directory is specified
   if (!DataHandler.existsSync(join(app.getPath('userData'), 'output_dir.txt'))) {
     dialog.showMessageBoxSync(MainWindow, {
       title: "Welcome to Ren'Dot",
+      type: 'info',
       buttons: ['OK'],
       message: "Since this is your first time using Ren'Dot, you will need to choose a directory to place your output JSON files (the dialogue files).\nDon't worry, you will need to do this just once."
     });
