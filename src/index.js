@@ -1,5 +1,5 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron');
 const { basename, extname, join, dirname } = require('path');
 
 const DataHandler = require('../lib/data.js');
@@ -7,6 +7,7 @@ const Parser = require('../lib/parser.js');
 const Promptr = require('../lib/promptr/prompt.js');
 
 const EMOTES_LIST_PATH = join(app.getPath('userData'), 'emotes.json');
+const RECENT_SCRIPTS_PATH = join(app.getPath('userData'), 'recent_scripts.json');
 
 let MainWindow;
 
@@ -34,6 +35,7 @@ const MENU = [
           defaultPath: join(DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')), 'Text Scripts')
         }).then((fileObject) => {
           if (fileObject.canceled) return;
+
           // Set the editor's text to the new script text
           // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
           let filename = basename(fileObject.filePaths[0], extname(fileObject.filePaths[0]));
@@ -44,6 +46,39 @@ const MENU = [
             name: filename,
             value: DataHandler.readSync(fileObject.filePaths[0])
           });
+
+          // Add the script to Recent Scripts JSON storage
+          if (!DataHandler.existsSync(RECENT_SCRIPTS_PATH)) {
+            DataHandler.create(RECENT_SCRIPTS_PATH, JSON.stringify({
+              scripts: [fileObject.filePaths[0]]
+            }), (err) => {
+              if (err) { console.log(`${err}. Could not add script to Recent Scripts.`); }
+            });
+          } else {
+            DataHandler.read(RECENT_SCRIPTS_PATH, (err, data) => {
+              if (!err && data) {
+                data = JSON.parse(data);
+                data.scripts.push(fileObject.filePaths[0]);
+                DataHandler.update(RECENT_SCRIPTS_PATH, JSON.stringify(data), (err) => {
+                  if (err) console.log('Could not add script to existing Recent Scripts.');
+                });
+              }
+            });
+          }
+          // Add the script to the Recent Scripts button
+          if (Menu.getApplicationMenu().getMenuItemById('recent_scripts').submenu.items.length < 11) {
+            Menu.getApplicationMenu().getMenuItemById('recent_scripts').submenu.append(new MenuItem({
+              label: fileObject.filePaths[0],
+              click: () => {
+                // Set the editor's text to the new script text
+                // Set the script name correctly if the user specified a folder the script should be saved in when they wrote it
+                MainWindow.webContents.send('open-script', {
+                  name: filename,
+                  value: DataHandler.readSync(fileObject.filePaths[0])
+                });
+              }
+            }));
+          }
         }, (err) => {
           if (err) dialog.showErrorBox('Error', 'Failed to open new script');
         });
@@ -54,6 +89,10 @@ const MENU = [
       click: () => {
         MainWindow.webContents.send('empty-check');
       }
+    }, {
+      label: 'Recent Scripts',
+      id: 'recent_scripts',
+      submenu: []
     }, {
       type: 'separator'
     }, {
@@ -165,23 +204,30 @@ const MENU = [
           buttons: ['OK']
         });
       }
+    }, {
+      type: 'separator'
+    }, {
+      label: 'About',
+      click: (menuItem, window, event) => {
+        dialog.showMessageBox(MainWindow, {
+          title: 'About',
+          type: 'info',
+          icon: './assets/fsnowdin.png',
+          message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot',
+          buttons: ['Close']
+        });
+      }
+    },
+    {
+      label: 'Quit',
+      role: 'quit'
     }]
-  },
-  {
-    label: 'About',
-    click: (menuItem, window, event) => {
-      dialog.showMessageBox(MainWindow, {
-        title: 'About',
-        type: 'info',
-        icon: './assets/fsnowdin.png',
-        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot',
-        buttons: ['Close']
-      });
-    }
-  },
-  {
-    label: 'Quit',
-    role: 'quit'
+  }, {
+    label: 'Edit',
+    role: 'editMenu'
+  }, {
+    label: 'View',
+    role: 'viewMenu'
   }
 ];
 
