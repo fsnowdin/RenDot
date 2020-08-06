@@ -78,17 +78,12 @@ const MENU = [
     }, {
       label: 'Add Emote',
       click: () => {
-        dialog.showMessageBoxSync(MainWindow, {
-          title: 'Current Emotes',
-          type: 'info',
-          message: Parser.Emotes.listCurrentEmotes(),
-          buttons: ['Close']
-        });
         Promptr.prompt('What is the new emote?').then((newEmote) => {
           Promptr.prompt(`What is ${newEmote}'s index?`).then((index) => {
+            index = Number(index);
             if (index > 0) {
               Parser.Emotes.addEmote(newEmote, index);
-              DataHandler.update(EMOTES_LIST_PATH, Parser.Emotes, (err) => {
+              DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes), (err) => {
                 if (!err) {
                   dialog.showMessageBox(MainWindow, {
                     title: 'New Emote Added',
@@ -106,22 +101,20 @@ const MENU = [
                 }
               });
             }
+          }).catch((err) => {
+            if (err) { console.log(`${err}`); }
           });
+        }).catch((err) => {
+          if (err) { console.log(`${err}`); }
         });
       }
     }, {
       label: 'Delete Emote',
       click: () => {
-        dialog.showMessageBoxSync(MainWindow, {
-          title: 'Current Emotes',
-          type: 'info',
-          message: Parser.Emotes.listCurrentEmotes(),
-          buttons: ['Close']
-        });
         Promptr.prompt('What is the emote you want to remove?').then((emote) => {
           if (emote in Parser.Emotes) {
             Parser.Emotes.deleteEmoteByName(emote);
-            DataHandler.update(EMOTES_LIST_PATH, Parser.Emotes, (err) => {
+            DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes), (err) => {
               if (!err) {
                 dialog.showMessageBox(MainWindow, {
                   title: 'Emote Deleted Successfully',
@@ -146,6 +139,16 @@ const MENU = [
               buttons: ['Close']
             });
           }
+        });
+      }
+    }, {
+      label: 'List Current Emotes',
+      click: () => {
+        dialog.showMessageBoxSync(MainWindow, {
+          title: 'Current Emotes',
+          type: 'info',
+          message: Parser.Emotes.listCurrentEmotes(),
+          buttons: ['Close']
         });
       }
     }]
