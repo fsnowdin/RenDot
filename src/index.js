@@ -57,33 +57,14 @@ const MENU = [
     }, {
       type: 'separator'
     }, {
-      label: 'Change Output Directory',
-      click: () => {
-        const result = dialog.showOpenDialogSync(MainWindow, {
-          properties: ['openDirectory']
-        });
-        if (result !== undefined) {
-          DataHandler.update(join(app.getPath('userData'), 'output_dir.txt'), result[0], (err) => {
-            if (err) console.error(err);
-            else {
-              dialog.showMessageBox(MainWindow, {
-                message: 'Rebase successful.\nYour new output directory is ' + result[0],
-                type: 'info',
-                buttons: ['OK']
-              });
-            }
-          });
-        }
-      }
-    }, {
       label: 'Add Emote',
       click: () => {
-        Promptr.prompt('What is the new emote?').then((newEmote) => {
+        Promptr.prompt('Emote to add').then((newEmote) => {
           Promptr.prompt(`What is ${newEmote}'s index?`).then((index) => {
             index = Number(index);
             if (index > 0) {
               Parser.Emotes.addEmote(newEmote, index);
-              DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes), (err) => {
+              DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes.emotes), (err) => {
                 if (!err) {
                   dialog.showMessageBox(MainWindow, {
                     title: 'New Emote Added',
@@ -111,15 +92,15 @@ const MENU = [
     }, {
       label: 'Delete Emote',
       click: () => {
-        Promptr.prompt('What is the emote you want to remove?').then((emote) => {
-          if (emote in Parser.Emotes) {
+        Promptr.prompt('Emote to remove').then((emote) => {
+          if (emote in Parser.Emotes.emotes) {
             Parser.Emotes.deleteEmoteByName(emote);
-            DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes), (err) => {
+            DataHandler.update(EMOTES_LIST_PATH, JSON.stringify(Parser.Emotes.emotes), (err) => {
               if (!err) {
                 dialog.showMessageBox(MainWindow, {
                   title: 'Emote Deleted Successfully',
                   type: 'info',
-                  message: `Emote ${emote} was successfully added.`,
+                  message: `Emote ${emote} was successfully deleted.`,
                   buttons: ['Close']
                 });
               } else {
@@ -143,12 +124,45 @@ const MENU = [
       }
     }, {
       label: 'List Current Emotes',
+      accelerator: 'CommandOrControl+L',
       click: () => {
         dialog.showMessageBoxSync(MainWindow, {
           title: 'Current Emotes',
           type: 'info',
           message: Parser.Emotes.listCurrentEmotes(),
           buttons: ['Close']
+        });
+      }
+    }, {
+      type: 'separator'
+    },
+    {
+      label: 'Change Output Directory',
+      click: () => {
+        const result = dialog.showOpenDialogSync(MainWindow, {
+          properties: ['openDirectory']
+        });
+        if (result !== undefined) {
+          DataHandler.update(join(app.getPath('userData'), 'output_dir.txt'), result[0], (err) => {
+            if (err) console.error(err);
+            else {
+              dialog.showMessageBox(MainWindow, {
+                message: 'Rebase successful.\nYour new output directory is ' + result[0],
+                type: 'info',
+                buttons: ['OK']
+              });
+            }
+          });
+        }
+      }
+    }, {
+      label: 'See Current Output Directory',
+      click: () => {
+        dialog.showMessageBox(MainWindow, {
+          title: 'Current Output Directory',
+          type: 'info',
+          message: DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')),
+          buttons: ['OK']
         });
       }
     }]
@@ -159,8 +173,8 @@ const MENU = [
       dialog.showMessageBox(MainWindow, {
         title: 'About',
         type: 'info',
-        // icon: './assets/fsnowdin.png',
-        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot\nYour files are saved at ' + DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')) + '.',
+        icon: './assets/fsnowdin.png',
+        message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot',
         buttons: ['Close']
       });
     }
@@ -189,7 +203,7 @@ app.on('ready', () => {
 
   // Initialize the JSON Emotes list
   if (!DataHandler.existsSync(join(app.getPath('userData'), 'Emotes.json'))) {
-    DataHandler.create(join(app.getPath('userData'), 'Emotes.json'), JSON.stringify(Parser.DEFAULT_EMOTES), (err) => {
+    DataHandler.create(join(app.getPath('userData'), 'Emotes.json'), JSON.stringify(Parser.Emotes.DEFAULT_EMOTES), (err) => {
       if (err) {
         dialog.showMessageBox(MainWindow, {
           title: 'Error',
@@ -200,9 +214,11 @@ app.on('ready', () => {
       }
     });
   } else {
-    DataHandler.read(join(app.getPath('userData'), 'Emotes.json'), (data) => {
-      if (data) {
-        Parser.Emotes = JSON.parse(data);
+    DataHandler.read(join(app.getPath('userData'), 'Emotes.json'), (err, data) => {
+      if (!err && data) {
+        Parser.Emotes.emotes = JSON.parse(data);
+      } else {
+        dialog.showErrorBox('Could Not Read Existing Emote List', `${err}`);
       }
     });
   }
