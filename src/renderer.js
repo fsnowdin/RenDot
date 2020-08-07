@@ -54,3 +54,12 @@ ipcRenderer.on('new-script', (event, data) => {
   document.getElementById('script').value = '';
   document.getElementById('script_name').focus();
 });
+
+// Spellcheck option
+// Refresh the textarea
+ipcRenderer.on('toggle-spellcheck', (event, checked) => {
+  const TEMP = document.getElementById('script').value;
+  document.getElementById('script').value = '';
+  document.getElementById('script').spellcheck = checked;
+  document.getElementById('script').value = TEMP;
+});

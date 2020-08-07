@@ -74,6 +74,14 @@ const MENU = [
       id: 'recent_scripts',
       submenu: []
     }, {
+      label: 'Toggle Spell Check',
+      type: 'checkbox',
+      id: 'toggle_spellcheck',
+      checked: true,
+      click: () => {
+        MainWindow.webContents.send('toggle-spellcheck', Menu.getApplicationMenu().getMenuItemById('toggle_spellcheck').checked);
+      }
+    }, {
       type: 'separator'
     }, {
       label: 'Add Emote',
@@ -192,7 +200,7 @@ const MENU = [
         dialog.showMessageBox(MainWindow, {
           title: 'About',
           type: 'info',
-          icon: './assets/fsnowdin.png',
+          // icon: './assets/fsnowdin.png',
           message: "Ren'Dot by Falling Snowdin.\nNode.js version: " + process.versions.node + '; ' + 'Electron version: ' + process.versions.electron + '.\nFile bugs here: https://github.com/tghgg/rendot',
           buttons: ['Close']
         });
@@ -219,7 +227,7 @@ app.on('ready', () => {
       width: 800,
       height: 700,
       backgroundColor: '#1d1d1d',
-      icon: './assets/icon.ico',
+      // icon: './assets/icon.ico',
       show: false,
       webPreferences: { nodeIntegration: true },
       enableRemoteModule: false
