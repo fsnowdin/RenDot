@@ -1,6 +1,7 @@
 'use strict';
 const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron');
 const { basename, extname, join, dirname } = require('path');
+const { readdirSync } = require('fs');
 
 const DataHandler = require('../lib/data.js');
 const Parser = require('../lib/parser.js');
@@ -162,6 +163,32 @@ const MENU = [
       }
     }, {
       type: 'separator'
+    }, {
+      label: 'Current Output Directory Info',
+      click: () => {
+        const outputPath = DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt'));
+
+        const userScriptsFolders = readdirSync(join(outputPath, 'Text Scripts'), { withFileTypes: true });
+
+        console.log(userScriptsFolders);
+
+        let scriptCount = 0;
+
+        for (let i = 0; i < userScriptsFolders.length; i++) {
+          if (userScriptsFolders[i].isDirectory()) {
+            scriptCount += readdirSync(join(outputPath, 'Text Scripts', userScriptsFolders[i].name)).length;
+          } else if (userScriptsFolders[i].isFile()) {
+            scriptCount++;
+          }
+        }
+
+        dialog.showMessageBox(MainWindow, {
+          title: 'Info',
+          type: 'info',
+          message: `Path: ${outputPath}\nNumber of Scripts: ${scriptCount}`,
+          buttons: ['OK']
+        });
+      }
     },
     {
       label: 'Change Output Directory',
@@ -181,16 +208,6 @@ const MENU = [
             }
           });
         }
-      }
-    }, {
-      label: 'See Current Output Directory',
-      click: () => {
-        dialog.showMessageBox(MainWindow, {
-          title: 'Current Output Directory',
-          type: 'info',
-          message: DataHandler.readSync(join(app.getPath('userData'), 'output_dir.txt')),
-          buttons: ['OK']
-        });
       }
     }, {
       type: 'separator'
