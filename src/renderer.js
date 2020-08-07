@@ -1,6 +1,25 @@
 'use strict';
 const { ipcRenderer } = require('electron');
 
+function triggerWordCount (event) {
+  let wordCount = document.getElementById('script').value.match(/([^\s]+)/g);
+  let lineCount = document.getElementById('script').value.match(/\n/g);
+
+  // Safety checks
+  if (wordCount === null) {
+    wordCount = 0;
+  } else {
+    wordCount = wordCount.length;
+  }
+  if (lineCount === null) {
+    lineCount = 1;
+  } else {
+    lineCount = lineCount.length + 1;
+  }
+
+  document.getElementById('word-count').innerHTML = wordCount + ' Words | ' + lineCount + ' Lines';
+}
+
 document.querySelector('form').addEventListener('submit', (event) => {
   event.preventDefault();
   ipcRenderer.send('started_parsing', {
@@ -9,6 +28,9 @@ document.querySelector('form').addEventListener('submit', (event) => {
   });
   document.querySelector('#script').focus();
 });
+
+// Script info
+document.getElementById('script').addEventListener('input', triggerWordCount);
 
 window.addEventListener('keydown', (event) => {
   if (event.keyCode === 13 && event.ctrlKey) {
@@ -22,16 +44,21 @@ ipcRenderer.on('parse', (event, data) => {
 
 ipcRenderer.on('open-script', (event, data) => {
   if (document.querySelector('#script').value !== '') {
-    console.log('Wait!');
     ipcRenderer.invoke('editor-overwrite-confirmation').then((result) => {
       if (result === 0) {
         document.querySelector('#script_name').value = data.name;
         document.querySelector('#script').value = data.value;
+
+        // Trigger word count tracker
+        triggerWordCount();
       }
     });
   } else {
     document.querySelector('#script_name').value = data.name;
     document.querySelector('#script').value = data.value;
+
+    // Trigger word count tracker
+    triggerWordCount();
   }
   document.querySelector('#script').focus();
 });
