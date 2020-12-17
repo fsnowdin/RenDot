@@ -282,13 +282,15 @@ app.on('ready', () => {
       buttons: ['OK'],
       message: "Since this is your first time using Ren'Dot, you will need to choose a directory to place your output JSON files (the dialogue files).\nDon't worry, you will need to do this just once."
     });
+
     const result = dialog.showOpenDialogSync(MainWindow, {
       properties: ['openDirectory']
     });
+
     if (result !== undefined) {
-      DataHandler.update(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
+      DataHandler.updateSync(join(app.getPath('userData'), 'output_dir.txt'), result[0]);
     } else {
-      DataHandler.update(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
+      DataHandler.updateSync(join(app.getPath('userData'), 'output_dir.txt'), app.getPath('userData'));
     }
   }
 
